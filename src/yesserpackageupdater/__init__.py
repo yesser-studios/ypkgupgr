@@ -8,6 +8,10 @@ def updatePackages():
     # Split the output into lines and ignore the header
     lines = outdated_packages.strip().split('\n')[2:]
 
+    if len(lines) <= 0:
+        print("No outdated packages found.")
+        return
+
     print("Updating packages using pip...")
     # Update each package
     for line in lines:
