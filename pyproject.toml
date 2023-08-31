@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PackageUpdater_yesseruser"
+version = "1.0.0"
+authors = [
+  { name="yesseruser", email="yesseruser@gmail.com" },
+]
+description = "A simple pip package updater"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Windows",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yesseruser/PyPackageUpdater"
+"Bug Tracker" = "https://github.com/yesseruser/PyPackageUpdater/issues"
