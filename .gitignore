@@ -13,4 +13,5 @@
 
 # PYPI created files
 src/PackageUpdater_yesseruser.egg-info
+src/packageupdater.egg-info
 dist
