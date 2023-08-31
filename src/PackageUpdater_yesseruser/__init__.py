@@ -16,3 +16,5 @@ def updatePackages():
         subprocess.call(['python', '-m', 'pip', 'install', '--upgrade', package_name])
 
     print("All outdated packages have been updated. Thank you for using this package.")
+
+updatePackages()
