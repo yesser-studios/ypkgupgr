@@ -12,6 +12,5 @@
 *.vsix
 
 # PYPI created files
-src/PackageUpdater_yesseruser.egg-info
-src/packageupdater.egg-info
+src/yesserpackageupdater.egg-info
 dist
