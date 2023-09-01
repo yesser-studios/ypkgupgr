@@ -3,7 +3,7 @@ import subprocess
 def updatePackages():
     print("Getting outdated pip packages...")
     # Run pip list command to get the outdated packages
-    outdated_packages = subprocess.check_output(['pip', 'list', '--outdated']).decode('utf-8')
+    outdated_packages = subprocess.check_output(['python', '-m', 'pip', 'list', '--outdated']).decode('utf-8')
 
     # Split the output into lines and ignore the header
     lines = outdated_packages.strip().split('\n')[2:]
