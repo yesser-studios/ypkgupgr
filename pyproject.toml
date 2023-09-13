@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[console_scripts]
+[project.scripts]
 yesserpackageupdater = "yesserpackageupdater:updatePackages"
 
 [project.urls]
