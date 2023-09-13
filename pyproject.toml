@@ -18,6 +18,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[console_scripts]
+yesserpackageupdater = "yesserpackageupdater:updatePackages"
+
 [project.urls]
 "Homepage" = "https://github.com/yesseruser/YesserPackageUpdater"
 "Bug Tracker" = "https://github.com/yesseruser/YesserPackageUpdater/issues"
