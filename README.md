@@ -4,13 +4,13 @@
 This is a simple package updater that updates all outdated packages when run.  
 Install by running:
 
-```
+``` sh
 python -m pip install yesserpackageupdater
 ```
 
 in CMD or PowerShell on Windows or
 
-```
+``` sh
 python3 -m pip install yesserpackageupdater
 ```
 
@@ -18,7 +18,7 @@ in Mac/Linux's default terminal.
 
 You can use it by running:  
 
-```
+``` sh
 yesserpackageupdater
 ```
 
