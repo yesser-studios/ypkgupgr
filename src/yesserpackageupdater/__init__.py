@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-def updatePackages():
+def update_packages():
     print("Getting outdated pip packages...")
     # Run pip list command to get the outdated packages
     outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated']).decode('utf-8')
@@ -21,5 +21,3 @@ def updatePackages():
         subprocess.call([sys.executable, '-m', 'pip', 'install', '--upgrade', package_name])
 
     print("All outdated packages have been updated. Thank you for using this package.")
-
-updatePackages()

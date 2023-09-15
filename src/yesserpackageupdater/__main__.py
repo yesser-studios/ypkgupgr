@@ -1,1 +1,3 @@
-# This exists just to not show an error when running module.
+from yesserpackageupdater import update_packages
+
+update_packages()

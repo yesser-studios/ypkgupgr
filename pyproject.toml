@@ -19,7 +19,7 @@ classifiers = [
 ]
 
 [project.scripts]
-yesserpackageupdater = "yesserpackageupdater:updatePackages"
+yesserpackageupdater = "yesserpackageupdater:update_packages"
 
 [project.urls]
 "Homepage" = "https://github.com/yesseruser/YesserPackageUpdater"
