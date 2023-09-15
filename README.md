@@ -25,4 +25,4 @@ yesserpackageupdater
 in CMD, PowerShell or your OS' default terminal.
 
 ~This package only works on Windows.~  
-This package works on any operating system since update 1.1.2
+This package works on any operating system since update 1.1.5
