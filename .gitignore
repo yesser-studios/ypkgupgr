@@ -14,3 +14,4 @@
 # PYPI created files
 src/yesserpackageupdater.egg-info
 dist
+__pycache__
