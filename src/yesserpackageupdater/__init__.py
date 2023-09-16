@@ -2,6 +2,8 @@ import subprocess
 import sys
 import asyncio
 
+failed = ""
+
 async def update(name: str):
     # subprocess.call([sys.executable, "-m", "pip", "install", "--upgrade", name])
     process = await asyncio.create_subprocess_shell(sys.executable + " -m pip install --upgrade " + name,
@@ -13,6 +15,10 @@ async def update(name: str):
         print("Successfully updated " + name)
     else:
         print(await process.communicate())
+        if len(failed) == 0:
+            failed = name
+        else:
+            failed = failed + ", " + name
 
 def update_packages():
     print("Getting outdated pip packages...")
@@ -34,4 +40,7 @@ def update_packages():
         # subprocess.call([sys.executable, '-m', 'pip', 'install', '--upgrade', package_name])
         asyncio.run(update(package_name))
 
-    print("All outdated packages have been updated. Thank you for using this package.")
+    if len(failed) == 0:
+        print("All outdated packages have been updated. Thank you for using this package.")
+    else:
+        print("The following packages failed to install: " + failed)
