@@ -1,5 +1,18 @@
 import subprocess
 import sys
+import asyncio
+
+async def update(name: str):
+    # subprocess.call([sys.executable, "-m", "pip", "install", "--upgrade", name])
+    process = await asyncio.create_subprocess_shell(sys.executable + " -m pip install --upgrade " + name,
+                                                    stdout=asyncio.subprocess.PIPE,
+                                                    stderr=asyncio.subprocess.PIPE)
+    
+    return_code = await process.wait()
+    if return_code == 0:
+        print("Successfully updated " + name)
+    else:
+        print(await process.communicate())
 
 def update_packages():
     print("Getting outdated pip packages...")
@@ -18,6 +31,7 @@ def update_packages():
     for line in lines:
         package_info = line.split()
         package_name = package_info[0]
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--upgrade', package_name])
+        # subprocess.call([sys.executable, '-m', 'pip', 'install', '--upgrade', package_name])
+        asyncio.run(update(package_name))
 
     print("All outdated packages have been updated. Thank you for using this package.")
