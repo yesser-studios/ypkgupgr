@@ -42,6 +42,8 @@ def update_packages():
         # subprocess.call([sys.executable, '-m', 'pip', 'install', '--upgrade', package_name])
         asyncio.run(update(package_name))
 
+    print()
+
     if len(failed) == 0:
         print("All outdated packages have been updated. Thank you for using this package.")
     else:
