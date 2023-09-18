@@ -23,6 +23,9 @@ async def update(name: str):
             failed = failed + ", " + name
 
 def update_packages():
+    """
+        If calling from a python file, please use a subprocess instead.
+    """
     print("Getting outdated pip packages...")
     # Run pip list command to get the outdated packages
     outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated']).decode('utf-8')
