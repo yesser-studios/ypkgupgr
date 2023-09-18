@@ -8,7 +8,7 @@ async def update(name: str):
     global failed
 
     # subprocess.call([sys.executable, "-m", "pip", "install", "--upgrade", name])
-    process = await asyncio.create_subprocess_shell(sys.executable + " -m pip install --upgrade " + name,
+    process = await asyncio.create_subprocess_shell('"' + sys.executable + " -m pip install --upgrade " + name + '"',
                                                     stdout=asyncio.subprocess.PIPE,
                                                     stderr=asyncio.subprocess.PIPE)
     
