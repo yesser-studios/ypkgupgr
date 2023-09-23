@@ -73,6 +73,7 @@ def update_packages():
     lines = outdated_packages.strip().split('\n')[2:]
 
     if len(lines) <= 0:
+        progress_ring(complete = True)
         print("No outdated packages found.")
         return
     
