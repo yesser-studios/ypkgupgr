@@ -4,22 +4,22 @@ import asyncio
 import warnings
 
 failed = ""
-outdatedCount = 0
-finishedCount = 0
+outdated_count = 0
+finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
 
 def progress_ring(complete = False, intermediate = False):
-    global outdatedCount
-    global finishedCount
+    global outdated_count
+    global finished_count
 
     if sys.platform != "win32":
         return
     
-    if outdatedCount == 0:
+    if outdated_count == 0:
         progress = 0
     else:
-        progress = int((finishedCount / outdatedCount) * 100)
+        progress = int((finished_count / outdated_count) * 100)
     state = 0
 
     if complete:
@@ -36,13 +36,13 @@ def progress_ring(complete = False, intermediate = False):
 
 async def update(name: str):
     global failed
-    global outdatedCount
-    global finishedCount
+    global outdated_count
+    global finished_count
     global yesserpackageupdater_outdated
 
     if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
         yesserpackageupdater_outdated = True
-        finishedCount += 1
+        finished_count += 1
         progress_ring()
         print("yesserpackageupdater is outdated. Continuing to update other packages...")
 
@@ -60,7 +60,7 @@ async def update(name: str):
     
     return_code = await process.wait()
     
-    finishedCount += 1
+    finished_count += 1
     progress_ring()
 
     if return_code == 0:
@@ -73,7 +73,7 @@ async def update(name: str):
             failed = failed + ", " + name
 
 def update_packages():
-    global outdatedCount
+    global outdated_count
     global yesserpackageupdater_outdated
 
     """
