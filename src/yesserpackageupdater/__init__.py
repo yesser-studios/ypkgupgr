@@ -95,7 +95,7 @@ def update_packages():
         print("No outdated packages found.")
         return
     
-    outdatedCount = len(lines)
+    outdated_count = len(lines)
 
     print("Updating packages using pip...")
     # Update each package
