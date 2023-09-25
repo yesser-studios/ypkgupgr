@@ -49,7 +49,7 @@ async def update(name: str):
         if failed == "":
             failed = name
         else:
-            failed = failed + ", " + name
+            failed += ", " + name
 
         return
 
@@ -70,7 +70,7 @@ async def update(name: str):
         if failed == "":
             failed = name
         else:
-            failed = failed + ", " + name
+            failed += ", " + name
 
 def update_packages():
     global outdated_count
