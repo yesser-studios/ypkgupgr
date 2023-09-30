@@ -17,12 +17,12 @@ body:
   - type: textarea
     attributes:
       label: Problem relation
-      description: Is your feature related to a problem? If so, please describe:
+      description: Is your feature related to a problem? If so, please describe here.
     validations:
       required: false
   - type: textarea
     attributes:
       label: Additional context
-      description: Please add any additional information here:
+      description: Please add any additional information here.
     validations:
       required: false
