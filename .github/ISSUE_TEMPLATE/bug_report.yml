@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # bug report
+        # Bug report
 
         Important to note that your issue may have already been reported before. Please check issues in https://github.com/yesseruser/YesserPackageUpdater/issues. If you find that it already exists, respond with a reaction or add any further information that may be helpful.
 
