@@ -1,31 +1,46 @@
----
 name: Bug report
-about: Create a report to help us find and fix an error
-title: ''
-labels: bug
-assignees: ''
+description: Report a broken issue.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # bug report
 
----
+        Important to note that your issue may have already been reported before. Please check issues in https://github.com/yesseruser/YesserPackageUpdater/issues. If you find that it already exists, respond with a reaction or add any further information that may be helpful.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. Ubuntu]
- - Package Version [e.g. 1.0.0]
-
-**Additional context**
-Add any other context about the problem here.
+  - type: dropdown
+    attributes:
+      label: Type
+      options:
+        - Crash
+        - Freezing
+        - Performance
+        - Cosmetic
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Bug description
+      description: How did you find the bug? Any additional details that might help?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots or videos
+      description: If applicable, add screenshots or videos that show the bug here.
+      placeholder: Drag and drop the screenshots/videos into this box.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: Version
+      description: The version you encountered this bug on. This is show when running `pip list` and finding `yesserpackageupdater`
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: OS
+      description: The operating system you encountered this bug on.
+      validations:
+        required: true
