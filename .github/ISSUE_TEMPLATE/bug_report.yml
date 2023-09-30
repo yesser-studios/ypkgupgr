@@ -1,5 +1,6 @@
 name: Bug report
 description: Report a broken issue.
+labels: bug
 body:
   - type: markdown
     attributes:
@@ -42,5 +43,11 @@ body:
     attributes:
       label: OS
       description: The operating system you encountered this bug on.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Please add any additional information here.
     validations:
       required: true
