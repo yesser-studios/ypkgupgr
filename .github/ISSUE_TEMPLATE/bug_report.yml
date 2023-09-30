@@ -50,4 +50,4 @@ body:
       label: Additional context
       description: Please add any additional information here.
     validations:
-      required: true
+      required: false
