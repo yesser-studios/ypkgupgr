@@ -42,5 +42,5 @@ body:
     attributes:
       label: OS
       description: The operating system you encountered this bug on.
-      validations:
-        required: true
+    validations:
+      required: true
