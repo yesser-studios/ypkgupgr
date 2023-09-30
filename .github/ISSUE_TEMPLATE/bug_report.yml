@@ -28,6 +28,19 @@ body:
       required: true
   - type: textarea
     attributes:
+      label: To reproduce
+      description: How do you reproduce the issue?
+      placeholder: 1. Open ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen? What should happen?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
       label: Screenshots or videos
       description: If applicable, add screenshots or videos that show the bug here.
       placeholder: Drag and drop the screenshots/videos into this box.
