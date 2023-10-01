@@ -82,7 +82,12 @@ async def update(name: str):
     if return_code == 0:
         print("Successfully updated " + name)
     else:
-        print(await process.communicate())
+        print() # Empty newline to separate errors.
+        # Separates the output string by lines.
+        (out, err) = await process.communicate()
+        for line in out.strip().decode().splitlines():
+            print(line)
+        
         if failed == "":
             failed = name
         else:
