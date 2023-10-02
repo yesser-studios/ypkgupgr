@@ -9,7 +9,7 @@ finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
 
-def progress_ring(complete = False, intermediate = False):
+def progress_ring(progress, complete = False, intermediate = False):
     """
         Updates Windows Terminal's progress ring.
     """
@@ -21,14 +21,8 @@ def progress_ring(complete = False, intermediate = False):
     if sys.platform != "win32":
         return
     
-    # Gets current progress.
-    if outdated_count == 0:
-        progress = 0
-    else:
-        progress = int((finished_count / outdated_count) * 100)
-    state = 0
-
     # Gets the correct progress ring state.
+    state = 0
     if complete:
         state = 0
     elif intermediate:
@@ -56,7 +50,7 @@ async def update(name: str):
     if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
         yesserpackageupdater_outdated = True
         finished_count += 1
-        progress_ring()
+        progress_ring(progress = int((finished_count / outdated_count) * 100))
         print("yesserpackageupdater is outdated. Continuing to update other packages...")
 
         if failed == "":
@@ -76,11 +70,12 @@ async def update(name: str):
     
     # Adds a finished and updates the progress ring.
     finished_count += 1
-    progress_ring()
+    progress = int((finished_count / outdated_count) * 100)
+    progress_ring(progress)
 
     # Checks for update success and if failed, logs the package's name into the failed list.
     if return_code == 0:
-        print("Successfully updated " + name)
+        print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count})")
     else:
         print() # Empty newline to separate errors.
         # Separates the output string by lines.
@@ -101,7 +96,7 @@ def update_packages():
     global outdated_count
     global yesserpackageupdater_outdated
     
-    progress_ring(intermediate = True)
+    progress_ring(progress = 0, intermediate = True)
 
     print("Getting outdated pip packages...")
 
@@ -113,7 +108,7 @@ def update_packages():
 
     # Checks if there are any outdated packages.
     if len(lines) <= 0:
-        progress_ring(complete = True)
+        progress_ring(progress = 100, complete = True)
         print("No outdated packages found.")
         return
     
@@ -140,7 +135,7 @@ def update_packages():
     if yesserpackageupdater_outdated:
         warnings.warn(f'The yesserpackageupdater package is outdated. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
     
-    progress_ring(complete = True)
+    progress_ring(progress = 100,complete = True)
 
 def update_packages_script():
     """
