@@ -5,7 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 dependencies = ["asyncio"]
 name = "yesserpackageupdater"
+
+# The workflow takes care of the version. No need to change.
 version = "1.4.1"
+
 authors = [
   { name="yesseruser", email="yesseruser@gmail.com" },
 ]
