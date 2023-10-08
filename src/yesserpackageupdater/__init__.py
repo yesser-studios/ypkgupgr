@@ -82,6 +82,8 @@ async def update(name: str):
         for line in out.strip().decode().splitlines():
             print(line)
         
+        print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        
         if failed == "":
             failed = name
         else:
