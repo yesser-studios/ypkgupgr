@@ -24,7 +24,7 @@ jobs:
     steps:
     - run: |
         TAG=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
-        sed -i -e '/^version/s/.*/version = "$TAG"'
+        sed -i -e '/^version/c\version = $TAG' pyproject.toml
     - uses: actions/checkout@v3
     - name: Set up Python
       uses: actions/setup-python@v3
