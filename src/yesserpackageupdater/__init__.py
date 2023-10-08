@@ -49,8 +49,9 @@ async def update(name: str):
     if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
         yesserpackageupdater_outdated = True
         finished_count += 1
-        progress_ring(progress = int((finished_count / outdated_count) * 100))
-        print("yesserpackageupdater is outdated. Continuing to update other packages...")
+        progress = int((finished_count / outdated_count) * 100)
+        progress_ring(progress)
+        print("yesserpackageupdater is outdated. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
 
         if failed == "":
             failed = name
