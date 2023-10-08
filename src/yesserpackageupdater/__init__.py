@@ -1,7 +1,6 @@
 import subprocess
 import sys
 import asyncio
-import warnings
 
 failed = ""
 outdated_count = 0
