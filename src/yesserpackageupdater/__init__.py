@@ -74,7 +74,7 @@ async def update(name: str):
 
     # Checks for update success and if failed, logs the package's name into the failed list.
     if return_code == 0:
-        print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count})")
+        print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
     else:
         print() # Empty newline to separate errors.
         # Separates the output string by lines.
