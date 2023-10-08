@@ -133,7 +133,7 @@ def update_packages():
 
     # Warns the user if yesserpackageupdater hasn't been updated.
     if yesserpackageupdater_outdated:
-        warnings.warn(f'The yesserpackageupdater package is outdated. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
+        print(f'The yesserpackageupdater package is outdated. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
     
     progress_ring(progress = 100,complete = True)
 
