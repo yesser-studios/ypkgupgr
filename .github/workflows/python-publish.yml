@@ -31,6 +31,7 @@ jobs:
         echo "Successfully changed package version to $TAG"
     - name: Add changelog to README
       run: |
+        OUT=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest")
         CHANGELOG=$(echo "$OUT" | jq -r .body)
         echo "$CHANGELOG" >>README.md
         cat README.md
