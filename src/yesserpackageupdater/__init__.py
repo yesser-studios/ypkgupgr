@@ -51,7 +51,7 @@ async def update(name: str):
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
-        print("yesserpackageupdater is outdated. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        print("yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
 
         if failed == "":
             failed = name
@@ -135,7 +135,7 @@ def update_packages():
 
     # Warns the user if yesserpackageupdater hasn't been updated.
     if yesserpackageupdater_outdated:
-        print(f'The yesserpackageupdater package is outdated. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
+        print(f'The yesserpackageupdater package is outdated, and you are using the script. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
     
     progress_ring(progress = 100,complete = True)
 
