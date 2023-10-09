@@ -73,11 +73,12 @@ async def update(name: str):
     progress = int((finished_count / outdated_count) * 100)
     progress_ring(progress)
 
+    print() # Empty newline to separate outputs.
+
     # Checks for update success and if failed, logs the package's name into the failed list.
     if return_code == 0:
         print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
     else:
-        print() # Empty newline to separate errors.
         # Separates the output string by lines.
         (out, err) = await process.communicate()
         for line in out.strip().decode().splitlines():
