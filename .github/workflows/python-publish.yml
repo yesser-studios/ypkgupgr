@@ -25,9 +25,14 @@ jobs:
     - uses: actions/checkout@v3
     - name: Change package version
       run: |
-        TAG=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
+        OUT=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+        TAG=$(echo "$OUT" | jq -r .tag_name)
         sed -i -e "/^version/c\version = \"$TAG\"" pyproject.toml
         echo "Successfully changed package version to $TAG"
+    - name: Add changelog to README
+      run: |
+        CHANGELOG=$(echo "$OUT" | jq -r .body)
+        echo "$CHANGELOG" >>README.md
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
