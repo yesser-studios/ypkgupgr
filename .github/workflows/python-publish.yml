@@ -33,6 +33,7 @@ jobs:
       run: |
         CHANGELOG=$(echo "$OUT" | jq -r .body)
         echo "$CHANGELOG" >>README.md
+        cat README.md
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
