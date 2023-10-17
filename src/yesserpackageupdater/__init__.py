@@ -1,12 +1,16 @@
 import subprocess
 import sys
 import asyncio
+import logging
 
 failed = ""
 outdated_count = 0
 finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
+
+def init_logging():
+    logging.basicConfig(level=logging.INFO, filename="logs.log")
 
 def progress_ring(progress, complete = False, intermediate = False):
     """
