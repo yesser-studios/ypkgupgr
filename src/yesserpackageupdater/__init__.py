@@ -11,7 +11,6 @@ finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
-file_handler
 
 def init_logging():
     """
@@ -19,7 +18,6 @@ def init_logging():
     """
 
     global logger
-    global file_handler
 
     logger.setLevel(logging.INFO)
     file_handler = FileHandler(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
