@@ -21,8 +21,11 @@ def init_logging():
 
     logger.setLevel(logging.INFO)
     file_handler = FileHandler(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
-    print(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S")
+    file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
+
+    logger.info("Logger initialized.")
 
 def progress_ring(progress, complete = False, intermediate = False):
     """
@@ -120,6 +123,7 @@ def update_packages():
     progress_ring(progress = 0, intermediate = True)
 
     print("Getting outdated pip packages...")
+    logger.info("Getting outdated pip packages")
 
     # Runs the pip list --outdated command to get the outdated packages.
     outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated']).decode('utf-8')
