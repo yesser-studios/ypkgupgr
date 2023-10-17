@@ -19,7 +19,7 @@ def init_logging():
 
     global logger
 
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG if "--log-debug" in sys.argv else logging.INFO)
     file_handler = FileHandler(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
     formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S")
     file_handler.setFormatter(formatter)
