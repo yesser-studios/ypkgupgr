@@ -80,7 +80,7 @@ async def update(name: str):
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
-        print("yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        print(f"yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info(f"Skipping yesserpackageupdater. See bottom of the logs for details.")
 
         if failed == "":
