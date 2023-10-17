@@ -11,6 +11,7 @@ finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
+log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
 
 def init_logging():
     """
@@ -19,11 +20,15 @@ def init_logging():
 
     global logger
 
-    logger.setLevel(logging.INFO)
-    file_handler = FileHandler(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
+    logger.setLevel(logging.DEBUG if "--log-debug" in sys.argv else logging.INFO)
+    file_handler = FileHandler(log_file)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
+
+    if "--clear-log" in sys.argv:
+        with open(log_file, 'w'):
+            pass
 
     logger.info("Logger initialized.")
 
