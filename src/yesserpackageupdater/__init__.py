@@ -1,16 +1,30 @@
 import subprocess
 import sys
+import os
 import asyncio
 import logging
+from logging import FileHandler
 
 failed = ""
 outdated_count = 0
 finished_count = 0
 yesserpackageupdater_outdated = False
 ran_from_script = False
+logger = logging.getLogger("logger")
+file_handler
 
 def init_logging():
-    logging.basicConfig(level=logging.INFO, filename="logs.log")
+    """
+        Initialises the logger.
+    """
+
+    global logger
+    global file_handler
+
+    logger.setLevel(logging.INFO)
+    file_handler = FileHandler(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
+    print(f"{os.path.dirname(os.path.realpath(__file__))}/logs.log")
+    logger.addHandler(file_handler)
 
 def progress_ring(progress, complete = False, intermediate = False):
     """
@@ -102,6 +116,8 @@ def update_packages():
 
     global outdated_count
     global yesserpackageupdater_outdated
+
+    logger.info("Starting update.")
     
     progress_ring(progress = 0, intermediate = True)
 
@@ -152,4 +168,8 @@ def update_packages_script():
     global ran_from_script
 
     ran_from_script = True
+    init_logging()
+
+    logger.info("Starting from script.")
+
     update_packages()
