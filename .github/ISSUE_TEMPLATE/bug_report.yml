@@ -58,6 +58,19 @@ body:
       description: The operating system you encountered this bug on.
     validations:
       required: true
+  - type: markdown
+    attributes:
+      content: |
+        ## Logs
+        Logs can be found at the package install location (`<pip show yesserpackageupdater - Location>/yesserpackageupdater`).  
+        Use the `--log-debug` argument to log debug logs.
+        Use `--clear-log` to clear the log file before logging.
+  - type: textarea
+    attributes:
+      label: Drag/upload your log files here.
+      placeholder: Drag and drop the logs into this box.
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Additional context
