@@ -63,7 +63,7 @@ body:
       content: |
         ## Logs
         Logs can be found at the package install location (`<pip show yesserpackageupdater - Location>/yesserpackageupdater`).  
-        Use the `--log-debug` argument to log debug logs.
+        Use the `--log-debug` argument to log debug logs, if asked by code owners.
         Use `--clear-log` to clear the log file before logging.
   - type: textarea
     attributes:
