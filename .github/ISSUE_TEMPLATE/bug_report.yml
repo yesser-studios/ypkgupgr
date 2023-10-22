@@ -60,7 +60,7 @@ body:
       required: true
   - type: markdown
     attributes:
-      content: |
+      value: |
         ## Logs
         Logs can be found at the package install location (`<pip show yesserpackageupdater - Location>/yesserpackageupdater`).  
         Use the `--log-debug` argument to log debug logs, if asked by code owners.
