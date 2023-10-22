@@ -41,8 +41,8 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: Screenshots or videos
-      description: If applicable, add screenshots or videos that show the bug here.
+      label: Screenshots, videos or console output
+      description: If applicable, add screenshots or videos that show the bug here, or copy-paste your console output into a code block here.
       placeholder: Drag and drop the screenshots/videos into this box.
     validations:
       required: false
