@@ -148,11 +148,6 @@ async def update(name: str, line: int):
 async def start_updates(lines: list[str]):
     """Updates each package."""
 
-    table = Table()
-    table.add_column("Package")
-    table.add_column("Status")
-    live = Live()
-
     tasks = []
 
     line_no = 4 # Tasks start at line 4, because there were 2 lines already printed + one to separate.
