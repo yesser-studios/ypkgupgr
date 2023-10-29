@@ -135,6 +135,20 @@ async def update(name: str):
 
         logger.debug(f"Added {name} to failed.")
 
+async def start_updates(lines: list[str]):
+    """Updates each package."""
+
+    tasks = []
+
+    for line in lines:
+        package_info = line.split()
+        package_name = package_info[0]
+        logger.debug(f"Starting to update {package_name}")
+        tasks.append(asyncio.create_task(update(package_name)))
+    
+    for task in tasks:
+        await task
+
 def update_packages():
     """
         If calling from a python file, please use a subprocess instead.
@@ -171,12 +185,7 @@ def update_packages():
 
     logger.info("Starting to update packages...")
 
-    # Updates each package
-    for line in lines:
-        package_info = line.split()
-        package_name = package_info[0]
-        logger.debug(f"Starting to update {package_name}")
-        asyncio.run(update(package_name))
+    asyncio.run(start_updates(lines))
 
     logger.info("Finished updating packages.")
 
