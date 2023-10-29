@@ -3,6 +3,7 @@ import sys
 import os
 import asyncio
 import logging
+
 from logging import FileHandler
 
 failed = ""
@@ -12,6 +13,7 @@ yesserpackageupdater_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
 log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
+line_length = dict()
 
 def init_logging():
     """
@@ -62,7 +64,13 @@ def progress_ring(progress, complete = False, intermediate = False):
     logger.debug(f"Progress ring updated with the following data: State: {state}; Progress: {progress}")
         
 
-async def update(name: str):
+def progress_update(line: int, text: str):
+    for i in range(line_length[line] + 1):
+        text += " "
+    print(f"\033[{line};1H" + text)
+    line_length[line] = len(text)
+
+async def update(name: str, line: int):
     """
         Updates the package using its name.
     """
@@ -71,8 +79,9 @@ async def update(name: str):
     global outdated_count
     global finished_count
     global yesserpackageupdater_outdated
-
+    
     logger.info(f"Updating {name}")
+    progress_update(line, f"{name}: Updating...")
 
     # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/YesserPackageUpdater/issues/11).
     if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
@@ -80,7 +89,8 @@ async def update(name: str):
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
-        print(f"yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        progress_update(line, "yesserpackageupdater: Skipped")
+        # print(f"yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info(f"Skipping yesserpackageupdater. See bottom of the logs for details.")
 
         if failed == "":
@@ -109,24 +119,24 @@ async def update(name: str):
     progress = int((finished_count / outdated_count) * 100)
     progress_ring(progress)
 
-    print() # Empty newline to separate outputs.
-
     # Checks for update success and if failed, logs the package's name into the failed list.
     if return_code == 0:
-        print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        progress_update(line, f"{name}: Done")
+        # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info(f"Successfully updated {name}.")
     else:
         logger.error(f"{name} failed to update; below is pip output:")
 
         # Separates the output string by lines.
         (out, err) = await process.communicate()
-        for line in out.strip().decode().splitlines():
-            print(line)
-            logger.error(line)
+        for errline in out.strip().decode().splitlines():
+            print(errline)
+            logger.error(errline)
 
         logger.info("End of pip output.")
         
-        print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        progress_update(line, f"{name}: Error")
+        # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         
         if failed == "":
             failed = name
@@ -138,13 +148,24 @@ async def update(name: str):
 async def start_updates(lines: list[str]):
     """Updates each package."""
 
+    table = Table()
+    table.add_column("Package")
+    table.add_column("Status")
+    live = Live()
+
     tasks = []
 
+    line_no = 4 # Tasks start at line 4, because there were 2 lines already printed + one to separate.
     for line in lines:
         package_info = line.split()
         package_name = package_info[0]
+
+        line_length[line_no] = 0
+
         logger.debug(f"Starting to update {package_name}")
-        tasks.append(asyncio.create_task(update(package_name)))
+        tasks.append(asyncio.create_task(update(package_name, line_no)))
+
+        line_no += 1
     
     for task in tasks:
         await task
@@ -159,7 +180,10 @@ def update_packages():
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
+    os.system('cls' if os.name == 'nt' else 'clear')
+
     progress_ring(progress = 0, intermediate = True)
+
 
     print("Getting outdated pip packages...")
     logger.info("Getting outdated packages.")
