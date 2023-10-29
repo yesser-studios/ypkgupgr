@@ -14,6 +14,7 @@ ran_from_script = False
 logger = logging.getLogger("logger")
 log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
 line_length = dict()
+line_count = 0
 
 def init_logging():
     """
@@ -147,6 +148,7 @@ async def update(name: str, line: int):
 
 async def start_updates(lines: list[str]):
     """Updates each package."""
+    global line_count
 
     tasks = []
 
@@ -161,6 +163,8 @@ async def start_updates(lines: list[str]):
         tasks.append(asyncio.create_task(update(package_name, line_no)))
 
         line_no += 1
+    
+    line_count = line_no
     
     for task in tasks:
         await task
@@ -209,7 +213,7 @@ def update_packages():
     logger.info("Finished updating packages.")
 
     # Empty line before conclusion.
-    print()
+    print(f"\033[{line_count};1H")
 
     # Prints conclusion.
     if len(failed) == 0:
