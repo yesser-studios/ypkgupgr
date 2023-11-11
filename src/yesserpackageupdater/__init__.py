@@ -188,7 +188,7 @@ def update_packages():
     logger.info("Getting outdated packages.")
 
     # Runs the pip list --outdated command to get the outdated packages.
-    outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated']).decode('utf-8')
+    outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated', '--disable-pip-version-check']).decode('utf-8')
 
     # Splits the output into lines and ignore the header.
     lines = outdated_packages.strip().split('\n')[2:]
