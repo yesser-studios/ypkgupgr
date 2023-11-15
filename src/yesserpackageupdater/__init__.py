@@ -35,6 +35,18 @@ def init_logging():
 
     logger.info("Logger initialized.")
 
+def help():
+    global logger
+    
+    logger.debug("Showing help...")
+
+    print("To update all packages, run the module without any parameters.")
+    print("-? | --help: Displays this help without updating packages.")
+    print("--clear-log: Clears the log file before writing to it.")
+    print("--log-debug: Logs debug information to the log file.")
+
+    logger.debug("Help shown.")
+
 def progress_ring(progress, complete = False, intermediate = False):
     """
         Updates Windows Terminal's progress ring.
@@ -176,6 +188,10 @@ def update_packages():
 
     global outdated_count
     global yesserpackageupdater_outdated
+
+    if ("-?" in sys.argv or "--help" in sys.argv):
+        help()
+        return
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
