@@ -141,8 +141,8 @@ async def update(name: str, line: int):
         logger.error(f"{name} failed to update; below is pip output:")
 
         # Separates the output string by lines.
-        out = await process.stdout.read()
-        for errline in out.decode().splitlines():
+        (out, err) = await process.communicate()
+        for errline in out.strip().decode().splitlines():
             print(errline)
             logger.error(errline)
 
