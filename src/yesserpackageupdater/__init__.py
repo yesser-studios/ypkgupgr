@@ -195,6 +195,7 @@ def update_packages():
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
+    # Clears the screen.
     print("\033c", end='')
 
     progress_ring(progress = 0, intermediate = True)
