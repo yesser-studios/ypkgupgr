@@ -195,7 +195,7 @@ def update_packages():
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
-    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\033c", end='')
 
     progress_ring(progress = 0, intermediate = True)
 
