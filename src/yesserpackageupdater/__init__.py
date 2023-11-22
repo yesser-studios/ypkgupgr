@@ -195,6 +195,7 @@ def update_packages():
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
+    # Clears the screen.
     print("\033c", end='')
 
     progress_ring(progress = 0, intermediate = True)
@@ -204,7 +205,7 @@ def update_packages():
     logger.info("Getting outdated packages.")
 
     # Runs the pip list --outdated command to get the outdated packages.
-    outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated', '-q']).decode('utf-8')
+    outdated_packages = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated', '--disable-pip-version-check']).decode('utf-8')
 
     # Splits the output into lines and ignore the header.
     lines = outdated_packages.strip().split('\n')[2:]
