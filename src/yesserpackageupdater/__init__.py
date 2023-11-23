@@ -143,7 +143,6 @@ async def update(name: str, line: int):
         # Separates the output string by lines.
         (out, err) = await process.communicate()
         for errline in out.strip().decode().splitlines():
-            print(errline)
             logger.error(errline)
 
         logger.info("End of pip output.")
