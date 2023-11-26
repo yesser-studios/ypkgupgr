@@ -87,7 +87,7 @@ def progress_ring(progress, complete = False, intermediate = False):
 def progress_update(line: int, text: str):
     for i in range(line_length[line] + 1):
         text += " "
-    print(f"\033[{line};1H" + color + text)
+    print(f"\033[{line};1H" + text)
     line_length[line] = len(text)
 
 async def update(name: str, line: int):
