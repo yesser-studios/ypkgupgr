@@ -1,7 +1,7 @@
+# yesserpackageupdater
+## The pip package updater by yesseruser
 
-# PIP Package Updater by yesseruser
-
-This is a simple package updater that updates all outdated packages when run.  
+This is a package updater that updates all outdated packages when run.  
 
 To install, follow the steps listed here:  
 [Installation](https://github.com/yesseruser/YesserPackageUpdater/wiki/Installation)
