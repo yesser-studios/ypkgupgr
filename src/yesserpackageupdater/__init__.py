@@ -84,7 +84,7 @@ def progress_ring(progress, complete = False, intermediate = False):
     logger.debug(f"Progress ring updated with the following data: State: {state}; Progress: {progress}")
         
 
-def progress_update(line: int, text: str, color: str = Colors.WHITE):
+def progress_update(line: int, text: str):
     for i in range(line_length[line] + 1):
         text += " "
     print(f"\033[{line};1H" + color + text)
@@ -101,7 +101,7 @@ async def update(name: str, line: int):
     global yesserpackageupdater_outdated
     
     logger.info(f"Updating {name}")
-    progress_update(line, f"{name}: Updating...", Colors.WHITE)
+    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
     # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/YesserPackageUpdater/issues/11).
     if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
@@ -109,7 +109,7 @@ async def update(name: str, line: int):
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
-        progress_update(line, "yesserpackageupdater: Skipped", Colors.YELLOW)
+        progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
         # print(f"yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info(f"Skipping yesserpackageupdater. See bottom of the logs for details.")
 
@@ -141,7 +141,7 @@ async def update(name: str, line: int):
 
     # Checks for update success and if failed, logs the package's name into the failed list.
     if return_code == 0:
-        progress_update(line, f"{name}: Done", Colors.GREEN)
+        progress_update(line, f"{name}: {Colors.GREEN}Done")
         # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info(f"Successfully updated {name}.")
     else:
@@ -154,7 +154,7 @@ async def update(name: str, line: int):
 
         logger.info("End of pip output.")
         
-        progress_update(line, f"{name}: Error", Colors.RED)
+        progress_update(line, f"{name}: {Colors.RED}Error")
         # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         
         if failed == "":
