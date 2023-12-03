@@ -12,6 +12,6 @@
 *.vsix
 
 # PYPI created files
-src/yesserpackageupdater.egg-info
+src/ypkgupgr.egg-info
 dist
 __pycache__
