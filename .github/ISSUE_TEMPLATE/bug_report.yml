@@ -7,7 +7,7 @@ body:
       value: |
         # Bug report
 
-        Important to note that your issue may have already been reported before. Please check issues in https://github.com/yesseruser/YesserPackageUpdater/issues. If you find that it already exists, respond with a reaction or add any further information that may be helpful.
+        Important to note that your issue may have already been reported before. Please check issues in https://github.com/yesseruser/ypkgupgr/issues. If you find that it already exists, respond with a reaction or add any further information that may be helpful.
 
   - type: dropdown
     attributes:
@@ -49,7 +49,7 @@ body:
   - type: input
     attributes:
       label: Version
-      description: The version you encountered this bug on. This is show when running `pip list` and finding `yesserpackageupdater`
+      description: The version you encountered this bug on. This is show when running `pip list` and finding `ypkgupgr`
     validations:
       required: true
   - type: input
@@ -62,7 +62,7 @@ body:
     attributes:
       value: |
         ## Logs
-        Logs can be found at the package install location (`<pip show yesserpackageupdater - Location>/yesserpackageupdater`).  
+        Logs can be found at the package install location (`<pip show ypkgupgr - Location>/ypkgupgr`).  
         Use the `--log-debug` argument to log debug logs, if asked by code owners.
         Use `--clear-log` to clear the log file before logging.
   - type: textarea
