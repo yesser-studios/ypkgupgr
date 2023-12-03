@@ -1,4 +1,4 @@
-# Security Policy
+# ypkgupgr Security Policy
 
 ## Supported Versions
 
