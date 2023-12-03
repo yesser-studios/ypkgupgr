@@ -17,7 +17,7 @@ class Colors:
 failed = ""
 outdated_count = 0
 finished_count = 0
-yesserpackageupdater_outdated = False
+ypkgupgr_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
 log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
@@ -99,27 +99,27 @@ async def update(name: str, line: int):
     global failed
     global outdated_count
     global finished_count
-    global yesserpackageupdater_outdated
+    global ypkgupgr_outdated
     
     logger.info(f"Updating {name}")
     progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
-    # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/YesserPackageUpdater/issues/11).
-    if name == "yesserpackageupdater" and ran_from_script and sys.platform == "win32":
-        yesserpackageupdater_outdated = True
+    # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
+    if name == "ypkgupgr" and ran_from_script and sys.platform == "win32":
+        ypkgupgr_outdated = True
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
         progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
-        # print(f"yesserpackageupdater is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-        logger.info(f"Skipping yesserpackageupdater. See bottom of the logs for details.")
+        # print(f"ypkgupgr is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        logger.info(f"Skipping ypkgupgr. See bottom of the logs for details.")
 
         if failed == "":
             failed = name
         else:
             failed += ", " + name
 
-        logger.debug("Added yesserpackageupdater into failed.")
+        logger.debug("Added ypkgupgr into failed.")
 
         return
 
@@ -194,7 +194,7 @@ def update_packages():
     """
 
     global outdated_count
-    global yesserpackageupdater_outdated
+    global ypkgupgr_outdated
 
     if ("-?" in sys.argv or "--help" in sys.argv):
         help()
@@ -247,16 +247,16 @@ def update_packages():
         print("The following packages failed to install: " + failed + "\n")
         logger.info(f"The following packages failed to install: {failed}")
 
-    # Warns the user if yesserpackageupdater hasn't been updated.
-    if yesserpackageupdater_outdated:
-        print(f'The yesserpackageupdater package is outdated, and you are using the script. Please use "{sys.executable} -m yesserpackageupdater" to update it.\n')
-        logger.info("yesserpackageupdater is outdated and the script is used on Windows.")
+    # Warns the user if ypkgupgr hasn't been updated.
+    if ypkgupgr_outdated:
+        print(f'The ypkgupgr package is outdated, and you are using the script. Please use "{sys.executable} -m ypkgupgr" to update it.\n')
+        logger.info("ypkgupgr is outdated and the script is used on Windows.")
     
     progress_ring(progress = 100,complete = True)
 
 def update_packages_script():
     """
-        Runs update_packages() and sets ran_from_script to True. Contributes to fixing issue #11. (https://github.com/yesseruser/YesserPackageUpdater/issues/11)
+        Runs update_packages() and sets ran_from_script to True. Contributes to fixing issue #11. (https://github.com/yesseruser/ypkgupgr/issues/11)
     """
 
     global ran_from_script
