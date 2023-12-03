@@ -11,6 +11,7 @@ class Colors:
     RED: str = '\u001b[31m'
     YELLOW: str = '\u001b[33m'
     GREEN: str = '\u001b[32m'
+    RESET: str = '\033[0m'
 
 
 failed = ""
@@ -236,7 +237,7 @@ def update_packages():
     logger.info("Finished updating packages.")
 
     # Empty line before conclusion.
-    print(f"\033[{line_count};1H" + Colors.WHITE)
+    print(f"\033[{line_count};1H" + Colors.RESET)
 
     # Prints conclusion.
     if len(failed) == 0:
