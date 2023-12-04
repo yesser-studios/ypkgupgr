@@ -49,7 +49,7 @@ body:
   - type: input
     attributes:
       label: Version
-      description: The version you encountered this bug on. This is show when running `pip list` and finding `ypkgupgr`
+      description: The version you encountered this bug on. This is show when running `pip show ypkgupgr`.
     validations:
       required: true
   - type: input
