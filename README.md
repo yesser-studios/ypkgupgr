@@ -3,6 +3,8 @@
 
 This is a package updater that updates all outdated packages when run.  
 
+This package works with Python 3.9+.
+
 To install, follow the steps listed here:  
 [Installation](https://github.com/yesseruser/ypkgupgr/wiki/Installation)
 
