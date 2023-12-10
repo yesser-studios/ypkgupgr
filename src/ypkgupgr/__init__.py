@@ -24,6 +24,9 @@ log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
 line_length = dict()
 line_count = 0
 
+def clear_screen():
+    print("\033c", end='')
+
 def init_logging():
     """
         Initialises the logger.
@@ -171,7 +174,7 @@ async def start_updates(lines: list[str]):
 
     tasks = []
 
-    line_no = 4 # Tasks start at line 4, because there were 2 lines already printed + one to separate.
+    line_no = 3 # Tasks start at line 3, because there was 1 line already printed + one to separate.
     for line in lines:
         package_info = line.split()
         package_name = package_info[0]
@@ -203,7 +206,7 @@ def update_packages():
     logger.info(f"Starting update. Platform: {sys.platform}")
     
     # Clears the screen.
-    print("\033c", end='')
+    clear_screen()
 
     progress_ring(progress = 0, intermediate = True)
 
@@ -227,6 +230,8 @@ def update_packages():
     outdated_count = len(lines)
 
     logger.info(f"Outdated packages: {lines}")
+
+    clear_screen()
 
     print("Updating packages using pip...")
 
