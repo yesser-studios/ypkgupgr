@@ -29,6 +29,8 @@ data_paths.setup()
 ignored_path = data_paths.app_data_path + "/ignored.cfg"
 log_file = f"{data_paths.log_file_path}"
 
+ignored = []
+
 print(ignored_path)
 
 def ignore_packages(packages: list):
@@ -63,6 +65,14 @@ def unignore_packages(packages: list):
     
     logger.info("Packages unignored.")
     print("Package/s unignored.")
+
+def get_ignored_packages():
+    logger.info("Getting ignored packages...")
+
+    with open(ignored_path, "r") as file:
+        lines = file.readlines
+        for line in lines:
+            ignored.append(line.strip())
 
 
 def clear_screen():
@@ -145,6 +155,14 @@ async def update(name: str, line: int):
     global finished_count
     global ypkgupgr_outdated
     
+    if (name in ignored): # Package in ignored
+        logger.info(f"Package {name} ignored.")
+        progress_update(line, f"{name}: {Colors.YELLOW}Ignored")
+        finished_count += 1
+        progress = int((finished_count / outdated_count) * 100)
+        progress_ring(progress)
+        return
+
     logger.info(f"Updating {name}")
     progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
