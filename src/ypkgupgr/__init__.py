@@ -14,7 +14,6 @@ class Colors:
     GREEN: str = '\u001b[32m'
     RESET: str = '\033[0m'
 
-
 failed = ""
 outdated_count = 0
 finished_count = 0
@@ -27,12 +26,29 @@ line_count = 0
 
 data_paths = AppDataPaths("ypkgupgr")
 data_paths.setup()
+ignored_path = data_paths.app_data_path + "/ignored.cfg"
 
 def ignore_packages(packages: list):
-    pass
+    with open(ignored_path, "a") as file:
+        file.writelines(packages)
+        file.flush()
+        file.close()
 
 def unignore_packages(packages: list):
-    pass
+    lines = None
+
+    with open(ignored_path, "r") as file:
+        lines = file.readlines
+        file.close()
+
+    for package in packages:
+        with open(ignored_path, "w") as file: # Open in overwrite mode
+            for line in lines:
+                if line.strip() != package: # Check if the line is identical with package
+                    file.write(line + "\n") # If not, write it to overwrite
+        file.flush()
+        file.close()
+
 
 def clear_screen():
     print("\033c", end='')
