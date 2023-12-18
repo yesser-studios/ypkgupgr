@@ -270,7 +270,7 @@ def update_packages():
         return
     
     if ("--unignore" in sys.argv):
-        ignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
+        unignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
         # ^ unignores everything after --unignore.
         return
 
