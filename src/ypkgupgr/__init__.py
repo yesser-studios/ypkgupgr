@@ -28,12 +28,14 @@ data_paths = AppDataPaths("ypkgupgr")
 data_paths.setup()
 ignored_path = data_paths.app_data_path + "/ignored.cfg"
 
+print(ignored_path)
+
 def ignore_packages(packages: list):
     logger.info("Ignoring packages:")
     logger.info(list)
 
     with open(ignored_path, "a") as file:
-        file.writelines(packages)
+        file.write("\n".join(packages) + "\n")
         file.flush()
         file.close()
     
