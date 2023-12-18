@@ -29,12 +29,21 @@ data_paths.setup()
 ignored_path = data_paths.app_data_path + "/ignored.cfg"
 
 def ignore_packages(packages: list):
+    logger.info("Ignoring packages:")
+    logger.info(list)
+
     with open(ignored_path, "a") as file:
         file.writelines(packages)
         file.flush()
         file.close()
+    
+    logger.info("Ignored packages.")
+    print("Packages ignored.")
 
 def unignore_packages(packages: list):
+    logger.info("Unignoring packages:")
+    logger.info(list)
+
     lines = None
 
     with open(ignored_path, "r") as file:
@@ -48,6 +57,9 @@ def unignore_packages(packages: list):
                     file.write(line + "\n") # If not, write it to overwrite
         file.flush()
         file.close()
+    
+    logger.info("Packages unignored.")
+    print("Packages unignored.")
 
 
 def clear_screen():
