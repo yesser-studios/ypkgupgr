@@ -60,8 +60,8 @@ def unignore_packages(packages: list):
             for line in lines:
                 if line.strip() != package: # Check if the line is identical with package
                     file.write(line + "\n") # If not, write it to overwrite
-        file.flush()
-        file.close()
+            file.flush()
+            file.close()
     
     logger.info("Packages unignored.")
     print("Package/s unignored.")
