@@ -5,6 +5,7 @@ import asyncio
 import logging
 
 from logging import FileHandler
+from appdata import AppDataPaths
 
 class Colors:
     WHITE: str = '\u001b[37m'
@@ -23,6 +24,15 @@ logger = logging.getLogger("logger")
 log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
 line_length = dict()
 line_count = 0
+
+data_paths = AppDataPaths("ypkgupgr")
+data_paths.setup()
+
+def ignore_packages(packages: list):
+    pass
+
+def unignore_packages(packages: list):
+    pass
 
 def clear_screen():
     print("\033c", end='')
@@ -201,6 +211,16 @@ def update_packages():
 
     if ("-?" in sys.argv or "--help" in sys.argv):
         help()
+        return
+    
+    if ("--ignore" in sys.argv):
+        ignore_packages(sys.argv[sys.argv.index("--ignore") + 1:])
+        # ^ ignores everything after --ignore.
+        return
+    
+    if ("--unignore" in sys.argv):
+        ignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
+        # ^ unignores everything after --unignore.
         return
 
     logger.info(f"Starting update. Platform: {sys.platform}")
