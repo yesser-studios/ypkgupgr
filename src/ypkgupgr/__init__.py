@@ -20,13 +20,14 @@ finished_count = 0
 ypkgupgr_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
-log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
+
 line_length = dict()
 line_count = 0
 
 data_paths = AppDataPaths("ypkgupgr")
 data_paths.setup()
 ignored_path = data_paths.app_data_path + "/ignored.cfg"
+log_file = f"{data_paths.log_file_path}"
 
 print(ignored_path)
 
