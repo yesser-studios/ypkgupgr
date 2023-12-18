@@ -5,6 +5,7 @@ import asyncio
 import logging
 
 from logging import FileHandler
+from appdata import AppDataPaths
 
 class Colors:
     WHITE: str = '\u001b[37m'
@@ -13,16 +14,64 @@ class Colors:
     GREEN: str = '\u001b[32m'
     RESET: str = '\033[0m'
 
-
 failed = ""
 outdated_count = 0
 finished_count = 0
 ypkgupgr_outdated = False
 ran_from_script = False
 logger = logging.getLogger("logger")
-log_file = f"{os.path.dirname(os.path.realpath(__file__))}/logs.log"
+
 line_length = dict()
 line_count = 0
+
+data_paths = AppDataPaths("ypkgupgr")
+data_paths.setup()
+ignored_path = data_paths.app_data_path + "/ignored.cfg"
+log_file = f"{data_paths.log_file_path}"
+
+ignored = []
+
+def ignore_packages(packages: list):
+    logger.info("Ignoring packages:")
+    logger.info(list)
+
+    with open(ignored_path, "a") as file:
+        file.write("\n".join(packages) + "\n")
+        file.flush()
+        file.close()
+    
+    logger.info("Ignored packages.")
+    print("Package/s ignored.")
+
+def unignore_packages(packages: list):
+    logger.info("Unignoring packages:")
+    logger.info(list)
+
+    lines = None
+
+    with open(ignored_path, "r") as file:
+        lines = file.readlines()
+        file.close()
+
+    for package in packages:
+        with open(ignored_path, "w") as file: # Open in overwrite mode
+            for line in lines:
+                if line.strip() != package: # Check if the line is identical with package
+                    file.write(line + "\n") # If not, write it to overwrite
+            file.flush()
+            file.close()
+    
+    logger.info("Packages unignored.")
+    print("Package/s unignored.")
+
+def get_ignored_packages():
+    logger.info("Getting ignored packages...")
+
+    with open(ignored_path, "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            ignored.append(line.strip())
+
 
 def clear_screen():
     print("\033c", end='')
@@ -55,6 +104,8 @@ def help():
     print("-? | --help: Displays this help without updating packages.")
     print("--clear-log: Clears the log file before writing to it.")
     print("--log-debug: Logs debug information to the log file.")
+    print("--ignore: Saves all packages placed after this to ignore. Does not update packages.")
+    print("--unignore: Unignores all packages placed after this.")
 
     logger.debug("Help shown.")
 
@@ -103,7 +154,17 @@ async def update(name: str, line: int):
     global outdated_count
     global finished_count
     global ypkgupgr_outdated
+
+    get_ignored_packages()
     
+    if (name in ignored): # Package in ignored
+        logger.info(f"Package {name} ignored.")
+        progress_update(line, f"{name}: {Colors.YELLOW}Ignored")
+        finished_count += 1
+        progress = int((finished_count / outdated_count) * 100)
+        progress_ring(progress)
+        return
+
     logger.info(f"Updating {name}")
     progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
@@ -201,6 +262,16 @@ def update_packages():
 
     if ("-?" in sys.argv or "--help" in sys.argv):
         help()
+        return
+    
+    if ("--ignore" in sys.argv):
+        ignore_packages(sys.argv[sys.argv.index("--ignore") + 1:])
+        # ^ ignores everything after --ignore.
+        return
+    
+    if ("--unignore" in sys.argv):
+        unignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
+        # ^ unignores everything after --unignore.
         return
 
     logger.info(f"Starting update. Platform: {sys.platform}")
