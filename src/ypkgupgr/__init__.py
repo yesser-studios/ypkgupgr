@@ -52,7 +52,7 @@ def unignore_packages(packages: list):
     lines = None
 
     with open(ignored_path, "r") as file:
-        lines = file.readlines
+        lines = file.readlines()
         file.close()
 
     for package in packages:
@@ -70,7 +70,7 @@ def get_ignored_packages():
     logger.info("Getting ignored packages...")
 
     with open(ignored_path, "r") as file:
-        lines = file.readlines
+        lines = file.readlines()
         for line in lines:
             ignored.append(line.strip())
 
@@ -154,6 +154,8 @@ async def update(name: str, line: int):
     global outdated_count
     global finished_count
     global ypkgupgr_outdated
+
+    get_ignored_packages()
     
     if (name in ignored): # Package in ignored
         logger.info(f"Package {name} ignored.")
