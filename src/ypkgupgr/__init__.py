@@ -38,7 +38,7 @@ def ignore_packages(packages: list):
         file.close()
     
     logger.info("Ignored packages.")
-    print("Packages ignored.")
+    print("Package/s ignored.")
 
 def unignore_packages(packages: list):
     logger.info("Unignoring packages:")
@@ -59,7 +59,7 @@ def unignore_packages(packages: list):
         file.close()
     
     logger.info("Packages unignored.")
-    print("Packages unignored.")
+    print("Package/s unignored.")
 
 
 def clear_screen():
