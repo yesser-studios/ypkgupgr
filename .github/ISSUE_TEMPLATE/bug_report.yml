@@ -62,9 +62,13 @@ body:
     attributes:
       value: |
         ## Logs
-        Logs can be found at the package install location (`<pip show ypkgupgr - Location>/ypkgupgr`).  
-        Use the `--log-debug` argument to log debug logs, if asked by code owners.
-        Use `--clear-log` to clear the log file before logging.
+        Where to find logs:
+        
+        ### Windows
+        The logs are located at `%USERPROFILE%\ypkgupgr\logs`.
+
+        ### Mac/Linux
+        The logs are located at `/<your-user-name>/.ypkgupgr/logs`. Make sure to replace <your-user-name> with your actual username.
   - type: textarea
     attributes:
       label: Drag/upload your log files here.
