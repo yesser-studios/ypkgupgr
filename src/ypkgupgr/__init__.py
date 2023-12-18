@@ -31,8 +31,6 @@ log_file = f"{data_paths.log_file_path}"
 
 ignored = []
 
-print(ignored_path)
-
 def ignore_packages(packages: list):
     logger.info("Ignoring packages:")
     logger.info(list)
