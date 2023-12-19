@@ -1,4 +1,5 @@
 [![PyPI release](https://img.shields.io/pypi/v/ypkgupgr)](https://pypi.org/project/ypkgupgr/)
+[![License](https://img.shields.io/github/license/Yesser-Studios/ypkgupgr)](https://github.com/Yesser-Studios/ypkgupgr/blob/master/LICENSE.md)
 
 # ypkgupgr
 ## The pip package updater by yesseruser
