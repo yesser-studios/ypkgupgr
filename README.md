@@ -7,6 +7,10 @@
 # ypkgupgr
 ## The pip package updater by yesseruser
 
+```
+pip install ypkgupgr
+```
+
 This is a package updater that updates all outdated packages when run.  
 
 This package works with Python 3.9+.
