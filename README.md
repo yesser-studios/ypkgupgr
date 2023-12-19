@@ -1,9 +1,8 @@
 [![PyPI release](https://img.shields.io/pypi/v/ypkgupgr)](https://pypi.org/project/ypkgupgr/)
 [![License](https://img.shields.io/github/license/Yesser-Studios/ypkgupgr)](https://github.com/Yesser-Studios/ypkgupgr/blob/master/LICENSE.md)
-[![Downloads](https://static.pepy.tech/personalized-badge/ypkgupgr?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)](https://pepy.tech/project/ypkgupgr)
-![GitHub issues](https://img.shields.io/github/issues/Yesser-Studios/ypkgupgr)  
+[![Downloads](https://static.pepy.tech/personalized-badge/ypkgupgr?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)](https://pepy.tech/project/ypkgupgr)    
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-![Build status](https://github.com/Yesser-Studios/ypkgupgr/actions/workflows/python-publish.yml/badge.svg)
+![GitHub issues](https://img.shields.io/github/issues/Yesser-Studios/ypkgupgr)
 
 # ypkgupgr
 ## The pip package updater by yesseruser
