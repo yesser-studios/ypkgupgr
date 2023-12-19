@@ -1,3 +1,5 @@
+[![PyPI release](https://img.shields.io/pypi/v/ypkgupgr)](https://pypi.org/project/ypkgupgr/)
+
 # ypkgupgr
 ## The pip package updater by yesseruser
 
