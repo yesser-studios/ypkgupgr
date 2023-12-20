@@ -73,6 +73,10 @@ def unignore_all():
 def get_ignored_packages():
     logger.info("Getting ignored packages...")
 
+    if (not os.path.exists(ignored_path)):
+        logger.info("Ignored file not found. Continuing without ignoring packages...")
+        return
+
     with open(ignored_path, "r") as file:
         lines = file.readlines()
         for line in lines:
