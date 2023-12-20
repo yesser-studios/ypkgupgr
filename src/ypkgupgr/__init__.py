@@ -64,6 +64,12 @@ def unignore_packages(packages: list):
     logger.info("Packages unignored.")
     print("Package/s unignored.")
 
+def unignore_all():
+    with open(ignored_path, "w") as file:
+        file.truncate(0)
+        file.flush()
+        file.close()
+
 def get_ignored_packages():
     logger.info("Getting ignored packages...")
 
