@@ -64,8 +64,18 @@ def unignore_packages(packages: list):
     logger.info("Packages unignored.")
     print("Package/s unignored.")
 
+def unignore_all():
+    with open(ignored_path, "w") as file:
+        file.truncate(0)
+        file.flush()
+        file.close()
+
 def get_ignored_packages():
     logger.info("Getting ignored packages...")
+
+    if (not os.path.exists(ignored_path)):
+        logger.info("Ignored file not found. Continuing without ignoring packages...")
+        return
 
     with open(ignored_path, "r") as file:
         lines = file.readlines()
@@ -105,7 +115,8 @@ def help():
     print("--clear-log: Clears the log file before writing to it.")
     print("--log-debug: Logs debug information to the log file.")
     print("--ignore: Saves all packages placed after this to ignore. Does not update packages.")
-    print("--unignore: Unignores all packages placed after this.")
+    print("--unignore: Unignores all packages placed after this. Does not update packages.")
+    print("--unignore-all: Unignores all ignored packages. Does not update packages.")
 
     logger.debug("Help shown.")
 
@@ -272,6 +283,10 @@ def update_packages():
     if ("--unignore" in sys.argv):
         unignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
         # ^ unignores everything after --unignore.
+        return
+    
+    if ("--unignore-all" in sys.argv):
+        unignore_all()
         return
 
     logger.info(f"Starting update. Platform: {sys.platform}")
