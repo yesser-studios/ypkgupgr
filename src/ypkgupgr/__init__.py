@@ -284,6 +284,10 @@ def update_packages():
         unignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
         # ^ unignores everything after --unignore.
         return
+    
+    if ("--unignore-all" in sys.argv):
+        unignore_all()
+        return
 
     logger.info(f"Starting update. Platform: {sys.platform}")
     
