@@ -111,7 +111,8 @@ def help():
     print("--clear-log: Clears the log file before writing to it.")
     print("--log-debug: Logs debug information to the log file.")
     print("--ignore: Saves all packages placed after this to ignore. Does not update packages.")
-    print("--unignore: Unignores all packages placed after this.")
+    print("--unignore: Unignores all packages placed after this. Does not update packages.")
+    print("--unignore-all: Unignores all ignored packages. Does not update packages.")
 
     logger.debug("Help shown.")
 
