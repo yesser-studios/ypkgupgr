@@ -101,7 +101,8 @@ def init_logging():
 
     global logger
 
-    os.makedirs(log_dir) # Create the logs directory. Will also create the AppData directory.
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir) # Create the logs directory. Will also create the AppData directory.
 
     logger.setLevel(logging.DEBUG if "--log-debug" in sys.argv else logging.INFO)
     file_handler = FileHandler(log_file)
