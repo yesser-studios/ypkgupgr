@@ -65,8 +65,8 @@ body:
         Where to find logs:
         
         ### Windows: `%LOCALAPPDATA%\Yesser Studios\ypkgupgr\Logs\log.log`
-        ### MacOS: `~/Library/Logs/ypkgupgr`
-        ### Linux: `~/.local/state/ypkgupgr/log`
+        ### MacOS: `~/Library/Logs/ypkgupgr/log.log`
+        ### Linux: `~/.local/state/ypkgupgr/log/log.log`
   - type: textarea
     attributes:
       label: Drag/upload your log files here.
