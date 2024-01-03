@@ -5,7 +5,7 @@ import asyncio
 import logging
 
 from logging import FileHandler
-from appdata import AppDataPaths
+import platformdirs
 
 class Colors:
     WHITE: str = '\u001b[37m'
@@ -24,10 +24,18 @@ logger = logging.getLogger("logger")
 line_length = dict()
 line_count = 0
 
-data_paths = AppDataPaths("ypkgupgr")
-data_paths.setup()
-ignored_path = data_paths.app_data_path + "/ignored.cfg"
-log_file = f"{data_paths.log_file_path}"
+app_name = "ypkgupgr"
+author_name = "Yesser Studios"
+
+appdata_dir = platformdirs.user_data_dir(app_name, author_name)
+ignored_path = appdata_dir + "/ignored.cfg"
+log_dir = platformdirs.user_log_dir(app_name, author_name)
+log_file = log_dir + "/log.log"
+
+# Log file location:
+# Windows: %LOCALAPPDATA%\Yesser Studios\ypkgupgr\Logs\log.log
+# MacOS: ~/Library/Logs/ypkgupgr
+# Linux: ~/.local/state/ypkgupgr/log
 
 ignored = []
 
@@ -92,6 +100,8 @@ def init_logging():
     """
 
     global logger
+
+    os.makedirs(log_dir) # Create the logs directory. Will also create the AppData directory.
 
     logger.setLevel(logging.DEBUG if "--log-debug" in sys.argv else logging.INFO)
     file_handler = FileHandler(log_file)
