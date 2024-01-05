@@ -282,6 +282,8 @@ def update_packages():
     global outdated_count
     global ypkgupgr_outdated
 
+    # Log commands are handled in init_logging.
+
     if ("-?" in sys.argv or "--help" in sys.argv):
         help()
         return
