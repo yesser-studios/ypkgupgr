@@ -14,4 +14,4 @@ Please do not open issues for feature requests.
 
 ## Patched a bug or implemented a feature?
 Open a pull request! We're glad you could help us.  
-Please do not work on unapproved feature requests. All PRs for unapproved features will be closed unless we approve the request.
+Please do not work on feature requests in discussions and wait for them to get converted to issues. All PRs for unapproved features will be closed unless we approve the request.
