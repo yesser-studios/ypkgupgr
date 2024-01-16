@@ -3,170 +3,14 @@ import sys
 import os
 import asyncio
 import logging
-
-from logging import FileHandler
 import platformdirs
-
-class Colors:
-    WHITE: str = '\u001b[37m'
-    RED: str = '\u001b[31m'
-    YELLOW: str = '\u001b[33m'
-    GREEN: str = '\u001b[32m'
-    RESET: str = '\033[0m'
-
-failed = ""
-outdated_count = 0
-finished_count = 0
-ypkgupgr_outdated = False
-ran_from_script = False
-logger = logging.getLogger("logger")
-
-line_length = dict()
-line_count = 0
-
-app_name = "ypkgupgr"
-author_name = "Yesser Studios"
-
-appdata_dir = platformdirs.user_data_dir(app_name, author_name)
-ignored_path = appdata_dir + "/ignored.cfg"
-log_dir = platformdirs.user_log_dir(app_name, author_name)
-log_file = log_dir + "/log.log"
-
-# Log file location:
-# Windows: %LOCALAPPDATA%\Yesser Studios\ypkgupgr\Logs\log.log
-# MacOS: ~/Library/Logs/ypkgupgr
-# Linux: ~/.local/state/ypkgupgr/log
-
-ignored = []
-
-def create_appdata_dirs():
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir) # Create the logs directory. Will also create the AppData directory.
-
-def ignore_packages(packages: list):
-    logger.info("Ignoring packages:")
-    logger.info(list)
-
-    with open(ignored_path, "a") as file:
-        file.write("\n".join(packages) + "\n")
-        file.flush()
-        file.close()
-    
-    logger.info("Ignored packages.")
-    print("Package/s ignored.")
-
-def unignore_packages(packages: list):
-    logger.info("Unignoring packages:")
-    logger.info(list)
-
-    lines = None
-
-    with open(ignored_path, "r") as file:
-        lines = file.readlines()
-        file.close()
-
-    for package in packages:
-        with open(ignored_path, "w") as file: # Open in overwrite mode
-            for line in lines:
-                if line.strip() != package: # Check if the line is identical with package
-                    file.write(line + "\n") # If not, write it to overwrite
-            file.flush()
-            file.close()
-    
-    logger.info("Packages unignored.")
-    print("Package/s unignored.")
-
-def unignore_all():
-    with open(ignored_path, "w") as file:
-        file.truncate(0)
-        file.flush()
-        file.close()
-
-def get_ignored_packages():
-    logger.info("Getting ignored packages...")
-
-    if (not os.path.exists(ignored_path)):
-        logger.info("Ignored file not found. Continuing without ignoring packages...")
-        return
-
-    with open(ignored_path, "r") as file:
-        lines = file.readlines()
-        for line in lines:
-            ignored.append(line.strip())
-
-
-def clear_screen():
-    print("\033c", end='')
-
-def init_logging():
-    """
-        Initialises the logger.
-    """
-
-    global logger
-
-    logger.setLevel(logging.DEBUG if "--log-debug" in sys.argv else logging.INFO)
-    file_handler = FileHandler(log_file)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S")
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    if "--clear-log" in sys.argv:
-        with open(log_file, 'w'):
-            pass
-
-    logger.info("Logger initialized.")
-
-def help():
-    global logger
-    
-    logger.debug("Showing help...")
-
-    print("To update all packages, run the module without any parameters.")
-    print("-? | --help: Displays this help without updating packages.")
-    print("--clear-log: Clears the log file before writing to it.")
-    print("--log-debug: Logs debug information to the log file.")
-    print("--ignore: Saves all packages placed after this to ignore. Does not update packages.")
-    print("--unignore: Unignores all packages placed after this. Does not update packages.")
-    print("--unignore-all: Unignores all ignored packages. Does not update packages.")
-
-    logger.debug("Help shown.")
-
-def progress_ring(progress, complete = False, intermediate = False):
-    """
-        Updates Windows Terminal's progress ring.
-    """
-
-    global outdated_count
-    global finished_count
-
-    # Checks if the user is on Windows. Otherwise the progress string might be printed and would confuse the user on Linux and Mac.
-    if sys.platform != "win32":
-        logger.debug("Progress ring not shown because platform is not Windows.")
-        return
-    
-    # Gets the correct progress ring state.
-    state = 0
-    if complete:
-        state = 0
-    elif intermediate:
-        state = 3
-    elif failed == "":
-        state = 1
-    else:
-        state = 2
-    
-    # Prints the progress string according to https://github.com/MicrosoftDocs/terminal/blob/main/TerminalDocs/tutorials/progress-bar-sequences.md
-    print(f"{chr(27)}]9;4;{state};{progress}{chr(7)}", end="")
-
-    logger.debug(f"Progress ring updated with the following data: State: {state}; Progress: {progress}")
-        
-
-def progress_update(line: int, text: str):
-    for i in range(line_length[line] + 1):
-        text += " "
-    print(f"\033[{line};1H" + Colors.RESET + text)
-    line_length[line] = len(text)
+from .colors import Colors
+from .consts import APP_NAME, AUTHOR_NAME
+from .logs import *
+from .appdata import create_appdata_dirs
+from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages, unignore_all
+from .graphics import progress_update, progress_ring, clear_screen
+from .misc import *
 
 async def update(name: str, line: int):
     """
@@ -284,10 +128,6 @@ def update_packages():
     global ypkgupgr_outdated
 
     # Log commands are handled in init_logging.
-
-    if ("-?" in sys.argv or "--help" in sys.argv):
-        help()
-        return
     
     if ("--ignore" in sys.argv):
         ignore_packages(sys.argv[sys.argv.index("--ignore") + 1:])
@@ -359,9 +199,9 @@ def update_packages():
     
     progress_ring(progress = 100,complete = True)
 
-def update_packages_script():
+def run_from_script():
     """
-        Runs update_packages() and sets ran_from_script to True. Contributes to fixing issue #11. (https://github.com/yesseruser/ypkgupgr/issues/11)
+        Runs update_packages() and sets ran_from_script to True. That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
     """
 
     global ran_from_script

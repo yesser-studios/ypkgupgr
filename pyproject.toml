@@ -25,8 +25,8 @@ dependencies = [
 ]
 
 [project.scripts]
-yesserpackageupdater = "ypkgupgr:update_packages_script"
-ypkgupgr = "ypkgupgr:update_packages_script"
+yesserpackageupdater = "ypkgupgr:run_from_script"
+ypkgupgr = "ypkgupgr:run_from_script"
 
 [project.urls]
 "Homepage" = "https://github.com/yesseruser/ypkgupgr"
