@@ -4,6 +4,7 @@ import os
 import asyncio
 import logging
 import platformdirs
+import click
 from .colors import Colors
 from .consts import APP_NAME, AUTHOR_NAME
 from .logs import *
@@ -199,6 +200,15 @@ def update_packages():
     
     progress_ring(progress = 100,complete = True)
 
+@click.command()
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', is_flag=True, help='Log debug information.')
+@click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
+@click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
+@click.option('--unignore-all', is_flag=True, help='Clear the ignored file and exit.')
+def update_command(clear_log, log_debug, ignore, unignore, unignore_all):
+    print(clear_log, log_debug, ignore, unignore, unignore_all)
+
 def run_from_script():
     """
         Runs update_packages() and sets ran_from_script to True. That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
@@ -214,4 +224,6 @@ def run_from_script():
 
     logger.info("Starting from script...")
 
-    update_packages()
+    # update_packages()
+
+    update_command()
