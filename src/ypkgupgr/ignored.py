@@ -42,6 +42,9 @@ def unignore_all():
         file.truncate(0)
         file.flush()
         file.close()
+    
+    log_info("All packages unignored.")
+    print("All packages unignored.")
 
 def get_ignored_packages():
     log_info("Getting ignored packages...")

@@ -128,29 +128,12 @@ def update_packages():
     global outdated_count
     global ypkgupgr_outdated
 
-    # Log commands are handled in init_logging.
-    
-    if ("--ignore" in sys.argv):
-        ignore_packages(sys.argv[sys.argv.index("--ignore") + 1:])
-        # ^ ignores everything after --ignore.
-        return
-    
-    if ("--unignore" in sys.argv):
-        unignore_packages(sys.argv[sys.argv.index("--unignore") + 1:])
-        # ^ unignores everything after --unignore.
-        return
-    
-    if ("--unignore-all" in sys.argv):
-        unignore_all()
-        return
-
     logger.info(f"Starting update. Platform: {sys.platform}")
     
     # Clears the screen.
     clear_screen()
 
     progress_ring(progress = 0, intermediate = True)
-
 
     print("Getting outdated pip packages...")
     logger.info("Getting outdated packages.")
@@ -202,28 +185,50 @@ def update_packages():
 
 @click.command()
 @click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', is_flag=True, help='Log debug information.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
 @click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
 @click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
-@click.option('--unignore-all', is_flag=True, help='Clear the ignored file and exit.')
-def update_command(clear_log, log_debug, ignore, unignore, unignore_all):
-    print(clear_log, log_debug, ignore, unignore, unignore_all)
+@click.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
+def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var):
+    global outdated_count
+    global ypkgupgr_outdated
+    global ran_from_script
 
-def run_from_script():
+    # Log commands are handled in init_logging.
+    init_logging(clear_log, log_debug_var)
+    
+    if ran_from_script:
+        log_info("Running from script.")
+    
+    log_info(f"Starting command. Parameters: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}")
+    
+    if (len(ignore) > 0):
+        ignore_packages(list(ignore))
+        # ^ ignores everything after --ignore.
+    
+    if (len(unignore) > 0):
+        unignore_packages(list(unignore))
+        # ^ unignores everything after --unignore.
+    
+    if (unignore_all_var):
+        unignore_all()
+
+    # Return after both ignoring and unignoring packages.
+    if (len(ignore) > 0 or len(unignore) > 0 or unignore_all_var):
+        return
+    
+    update_packages()
+
+
+def run_from_script():  
     """
         Runs update_packages() and sets ran_from_script to True. That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
     """
 
     global ran_from_script
-
+ 
     ran_from_script = True
 
     create_appdata_dirs()
-
-    init_logging()
-
-    logger.info("Starting from script...")
-
-    # update_packages()
 
     update_command()
