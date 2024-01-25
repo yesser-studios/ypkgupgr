@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "ypkgupgr"
 
 # The workflow takes care of the version. No need to change.
-version = "1.7.69"
+version = "69.69.69"
 
 authors = [
   { name="yesseruser", email="yesseruser@gmail.com" },
@@ -20,12 +20,13 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "platformdirs>=4.1.0"
+    "platformdirs>=4.1.0",
+    "click>=8.1.7"
 ]
 
 [project.scripts]
-yesserpackageupdater = "ypkgupgr:update_packages_script"
-ypkgupgr = "ypkgupgr:update_packages_script"
+yesserpackageupdater = "ypkgupgr:run_from_script"
+ypkgupgr = "ypkgupgr:run_from_script"
 
 [project.urls]
 "Homepage" = "https://github.com/yesseruser/ypkgupgr"
