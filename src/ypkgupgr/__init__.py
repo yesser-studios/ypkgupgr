@@ -8,8 +8,9 @@ import click
 from .colors import Colors
 from .consts import APP_NAME, AUTHOR_NAME
 from .logs import *
-from .appdata import create_appdata_dirs
-from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages, unignore_all
+from .appdata import create_appdata_dirs, log_dir
+from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages
+from .ignored import unignore_all as actually_unignore_all
 from .graphics import progress_update, progress_ring, clear_screen
 from .misc import *
 
@@ -183,26 +184,31 @@ def update_packages():
     
     progress_ring(progress = 100,complete = True)
 
-@click.group()
+@click.group(context_settings=dict(help_option_names=["-?", "--help"]), invoke_without_command=True)
 @click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
 @click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
-def cli(clear_log, log_debug_var):
-    # Log commands are handled in init_logging.
-    init_logging(clear_log, log_debug_var)
-
-@cli.command(context_settings=dict(help_option_names=["-?", "--help"]))
-@cli.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
-@cli.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
-@cli.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
-def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var):
+@click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
+@click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
+@click.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
+@click.pass_context
+def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all_var):
     global outdated_count
     global ypkgupgr_outdated
     global ran_from_script
     
+    create_appdata_dirs()
+
+    # Log commands are handled in init_logging.
+    init_logging(clear_log, log_debug_var)
+
     if ran_from_script:
         log_info("Running from script.")
     
-    log_info(f"Starting command. Parameters: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}")
+    if (ctx.invoked_subcommand is not None):
+        log_info(f"Starting command {ctx.invoked_subcommand}.")
+        return
+
+    log_info(f"Starting command. Options: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}")
     
     if (len(ignore) > 0):
         ignore_packages(list(ignore))
@@ -213,7 +219,7 @@ def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var)
         # ^ unignores everything after --unignore.
     
     if (unignore_all_var):
-        unignore_all()
+        actually_unignore_all()
 
     # Return after both ignoring and unignoring packages.
     if (len(ignore) > 0 or len(unignore) > 0 or unignore_all_var):
@@ -221,8 +227,25 @@ def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var)
     
     update_packages()
 
-@cli.command(context_settings=())
+@update_command.command(help="Add all packages in the given arguments to the ignored file and exit.")
+@click.argument("to_ignore", nargs=-1)
+def ignore(to_ignore):
+    if (len(to_ignore) > 0):
+        ignore_packages(to_ignore)
 
+@update_command.command(help="Remove all packages in the given arguments from the ignored file and exit.")
+@click.argument("to_unignore", nargs=-1)
+def unignore(to_unignore):
+    if (len(to_unignore) > 0):
+        unignore_packages(to_unignore)
+
+@update_command.command(help="Clear the ignored file and exit.")
+def unignore_all():
+    actually_unignore_all()
+
+@update_command.command(help="Open the logs directory with your default file explorer and exit.")
+def open_logs():
+    click.launch(log_dir)
 
 def run_from_script():  
     """
@@ -232,7 +255,5 @@ def run_from_script():
     global ran_from_script
  
     ran_from_script = True
-
-    create_appdata_dirs()
 
     update_command()
