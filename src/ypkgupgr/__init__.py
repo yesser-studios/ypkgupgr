@@ -183,19 +183,21 @@ def update_packages():
     
     progress_ring(progress = 100,complete = True)
 
-@click.command(context_settings=dict(help_option_names=["-?", "--help"]))
+@click.group()
 @click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
 @click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
-@click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
-@click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
-@click.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
+def cli(clear_log, log_debug_var):
+    # Log commands are handled in init_logging.
+    init_logging(clear_log, log_debug_var)
+
+@cli.command(context_settings=dict(help_option_names=["-?", "--help"]))
+@cli.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
+@cli.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
+@cli.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
 def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var):
     global outdated_count
     global ypkgupgr_outdated
     global ran_from_script
-
-    # Log commands are handled in init_logging.
-    init_logging(clear_log, log_debug_var)
     
     if ran_from_script:
         log_info("Running from script.")
@@ -218,6 +220,8 @@ def update_command(clear_log, log_debug_var, ignore, unignore, unignore_all_var)
         return
     
     update_packages()
+
+@cli.command(context_settings=())
 
 
 def run_from_script():  
