@@ -183,7 +183,7 @@ def update_packages():
     
     progress_ring(progress = 100,complete = True)
 
-@click.command()
+@click.command(context_settings=dict(help_option_names=["-?", "--help"]))
 @click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
 @click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
 @click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
