@@ -6,7 +6,7 @@ ignored = []
 
 def ignore_packages(packages: list):
     log_info("Ignoring packages:")
-    log_info(list)
+    log_info(packages)
 
     with open(ignored_path, "a") as file:
         file.write("\n".join(packages) + "\n")
@@ -18,7 +18,7 @@ def ignore_packages(packages: list):
 
 def unignore_packages(packages: list):
     log_info("Unignoring packages:")
-    log_info(list)
+    log_info(packages)
 
     lines = None
 
