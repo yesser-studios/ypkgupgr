@@ -229,18 +229,33 @@ def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all
 
 @update_command.command(help="Add all packages in the given arguments to the ignored file and exit.")
 @click.argument("to_ignore", nargs=-1)
-def ignore(to_ignore):
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+def ignore(to_ignore, clear_log, log_debug_var):
+    
+    init_logging(clear_log, log_debug_var)
+
     if (len(to_ignore) > 0):
         ignore_packages(to_ignore)
 
 @update_command.command(help="Remove all packages in the given arguments from the ignored file and exit.")
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
 @click.argument("to_unignore", nargs=-1)
-def unignore(to_unignore):
+def unignore(to_unignore, clear_log, log_debug_var):
+
+    init_logging(clear_log, log_debug_var)
+
     if (len(to_unignore) > 0):
         unignore_packages(to_unignore)
 
 @update_command.command(help="Clear the ignored file and exit.")
-def unignore_all():
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+def unignore_all(clear_log, log_debug_var):
+
+    init_logging(clear_log, log_debug_var)
+
     actually_unignore_all()
 
 @update_command.command(help="Open the logs directory with your default file explorer and exit.")
