@@ -25,7 +25,7 @@ def init_logging(clear_log, log_debug):
     if clear_log:
         with open(log_file, 'w'):
             pass
-
+        logger.debug("Debug logging mode on.")
     logger.info("Logger initialized.")
 
 def log_info(log: str):
