@@ -4,21 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37200fe9-4f13-44a3-b16e-1b9dda5c23f6" name="Changes" comment="Initialized PyCharm project">
-      <change afterPath="$PROJECT_DIR$/.idea/ypkgupgr.iml" afterDir="false" />
-    </list>
+    <list default="true" id="37200fe9-4f13-44a3-b16e-1b9dda5c23f6" name="Changes" comment="Initialized PyCharm project files." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="yesseruser &lt;67008763+yesseruser@users.noreply.github.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="pycharm" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
@@ -37,6 +41,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 0
 }]]></component>
@@ -54,9 +61,10 @@
     "Python.__main__.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "pep8",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Programming/Python/ypkgupgr"
+    "last_opened_file_path": "E:/Programming/Python/ypkgupgr",
+    "settings.editor.selected.configurable": "vcs.Git"
   }
 }]]></component>
   <component name="RunManager">
@@ -115,7 +123,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706309555343</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fixed some code factoring issues.">
+      <option name="closed" value="true" />
+      <created>1706310299619</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706310299619</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Initialized PyCharm project files.">
+      <option name="closed" value="true" />
+      <created>1706310460570</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706310460570</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -132,6 +156,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Initialized PyCharm project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialized PyCharm project" />
+    <MESSAGE value="Fixed some code factoring issues." />
+    <MESSAGE value="Initialized PyCharm project files." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initialized PyCharm project files." />
   </component>
 </project>
