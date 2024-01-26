@@ -1,4 +1,3 @@
-from . import update_command, init_logging
-from .appdata import create_appdata_dirs
+from . import update_command
 
 update_command()
