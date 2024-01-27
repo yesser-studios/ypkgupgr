@@ -34,7 +34,7 @@
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
         <option name="accountId" value="50817737-eef9-41cb-a56d-186375b47b8f" />
-        <option name="url" value="https://github.com/yesseruser/ypkgupgr.git" />
+        <option name="url" value="https://github.com/Yesser-Studios/ypkgupgr.git" />
       </UrlAndAccount>
     </option>
   </component>
@@ -139,7 +139,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706310460570</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Initialized PyCharm project files.">
+      <option name="closed" value="true" />
+      <created>1706310574093</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1706310574093</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
