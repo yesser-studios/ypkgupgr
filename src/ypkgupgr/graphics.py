@@ -1,4 +1,5 @@
 import os
+
 from .logs import log_debug
 from .colors import Colors
 from .misc import failed, line_length
