@@ -49,7 +49,7 @@ def progress_update(line: int, text: str):
 
     buffer = io.StringIO()  # To show processed output all at once
     for string in current_lines:
-        buffer.write(string)
+        buffer.write(string + "\n")
     buffer.flush()
 
     clear_screen()
