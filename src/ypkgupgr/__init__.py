@@ -110,8 +110,6 @@ async def start_updates(lines: list[str]):
         package_info = line.split()
         package_name = package_info[0]
 
-        line_length[line_no] = 0
-
         logger.debug(f"Starting to update {package_name}")
         tasks.append(asyncio.create_task(update(package_name, line_no)))
 
@@ -138,6 +136,7 @@ def update_packages():
 
     progress_ring(progress=0, intermediate=True)
 
+    # Remember to change string in misc.current_lines if changing this
     print("Getting outdated pip packages...")
     logger.info("Getting outdated packages.")
 
@@ -161,6 +160,7 @@ def update_packages():
 
     clear_screen()
 
+    # Remember to change string in misc.current_lines if changing this
     print("Updating packages using pip...")
 
     logger.info("Starting to update packages...")
