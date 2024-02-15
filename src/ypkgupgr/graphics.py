@@ -1,4 +1,5 @@
 import os
+import io
 
 from .logs import log_debug
 from .colors import Colors
@@ -46,6 +47,10 @@ def progress_update(line: int, text: str):
             current_lines.append("")
         current_lines.append(Colors.RESET + text)
 
-    clear_screen()
+    buffer = io.StringIO()  # To show processed output all at once
     for string in current_lines:
-        print(string)
+        buffer.write(string)
+    buffer.flush()
+
+    clear_screen()
+    print(buffer.getvalue())
