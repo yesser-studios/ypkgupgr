@@ -276,10 +276,13 @@ def open_logs(clear_log, log_debug_var):
 @click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
 @click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
 def log_path(clear_log, log_debug_var):
+    init_logging(clear_log, log_debug_var)
     print("Log path:")
     print(log_dir)
     pyperclip.copy(log_dir)
     print("Path copied to clipboard.")
+
+    log_debug(f"Copied path to clipboard: {log_dir}")
 
 
 def run_from_script():
