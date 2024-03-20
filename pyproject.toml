@@ -20,8 +20,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "platformdirs>=4.1.0",
-    "click>=8.1.7"
+    "platformdirs~=4.2.0",
+    "click~=8.1.7",
+    "pyperclip~=1.8.2"
 ]
 
 [project.scripts]

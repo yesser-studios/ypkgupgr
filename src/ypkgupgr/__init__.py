@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 import click
+import pyperclip
 
 from .appdata import create_appdata_dirs, log_dir
 from .colors import Colors
@@ -265,8 +266,23 @@ def unignore_all(clear_log, log_debug_var):
 
 
 @update_command.command(help="Open the logs directory with your default file explorer and exit.")
-def open_logs():
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+def open_logs(clear_log, log_debug_var):
     click.launch(log_dir)
+
+
+@update_command.command(help="Show and copy the path to the logs directory and exit.")
+@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
+@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+def log_path(clear_log, log_debug_var):
+    init_logging(clear_log, log_debug_var)
+    print("Log path:")
+    print(log_dir)
+    pyperclip.copy(log_dir)
+    print("Path copied to clipboard.")
+
+    log_debug(f"Copied path to clipboard: {log_dir}")
 
 
 def run_from_script():
