@@ -15,3 +15,5 @@
 src/ypkgupgr.egg-info
 dist
 __pycache__
+
+.idea/
