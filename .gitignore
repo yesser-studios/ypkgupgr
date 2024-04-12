@@ -16,4 +16,7 @@ src/ypkgupgr.egg-info
 dist
 __pycache__
 
-.idea/
+.idea/*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/misc.xml
