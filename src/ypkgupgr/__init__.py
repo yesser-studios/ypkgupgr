@@ -7,12 +7,11 @@ import pyperclip
 
 from .appdata import create_appdata_dirs, log_dir
 from .colors import Colors
-from .consts import APP_NAME, AUTHOR_NAME
 from .graphics import progress_update, progress_ring, clear_screen
 from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages
 from .ignored import unignore_all as actually_unignore_all
-from .logs import *
-from .misc import *
+from .logs import logger, init_logging
+from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated
 
 
 async def update(name: str, line: int):
@@ -27,7 +26,7 @@ async def update(name: str, line: int):
 
     get_ignored_packages()
 
-    if (name in ignored):  # Package in ignored
+    if name in ignored:  # Package in ignored
         logger.info(f"Package {name} ignored.")
         progress_update(line, f"{name}: {Colors.YELLOW}Ignored")
         finished_count += 1
@@ -46,7 +45,7 @@ async def update(name: str, line: int):
         progress_ring(progress)
         progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
         # print(f"ypkgupgr is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-        logger.info(f"Skipping ypkgupgr. See bottom of the logs for details.")
+        logger.info("Skipping ypkgupgr. See bottom of the logs for details.")
 
         if failed == "":
             failed = name
