@@ -1,4 +1,4 @@
-from .appdata import log_dir, log_file
+from .appdata import log_file
 import logging
 
 logger = logging.getLogger("logger")
@@ -7,6 +7,7 @@ logger = logging.getLogger("logger")
 # Windows: %LOCALAPPDATA%\Yesser Studios\ypkgupgr\Logs\log.log
 # MacOS: ~/Library/Logs/ypkgupgr
 # Linux: ~/.local/state/ypkgupgr/log
+
 
 def init_logging(clear_log, log_debug):
     """
@@ -28,8 +29,11 @@ def init_logging(clear_log, log_debug):
         logger.debug("Debug logging mode on.")
     logger.info("Logger initialized.")
 
+
 def log_info(log: str):
     logger.info(log)
 
+
 def log_debug(log: str):
     logger.debug(log)
+
