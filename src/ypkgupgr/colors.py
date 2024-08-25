@@ -4,4 +4,3 @@ class Colors:
     YELLOW: str = '\u001b[33m'
     GREEN: str = '\u001b[32m'
     RESET: str = '\033[0m'
-

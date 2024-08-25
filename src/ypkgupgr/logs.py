@@ -36,4 +36,3 @@ def log_info(log: str):
 
 def log_debug(log: str):
     logger.debug(log)
-

@@ -61,4 +61,3 @@ def get_ignored_packages():
         lines = file.readlines()
         for line in lines:
             ignored.append(line.strip())
-
