@@ -10,7 +10,7 @@ from .colors import Colors
 from .graphics import progress_update, progress_ring, clear_screen
 from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages
 from .ignored import unignore_all as actually_unignore_all
-from .logs import logger, init_logging
+from .logs import logger, init_logging, log_debug, log_info
 from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated
 
 
@@ -286,7 +286,8 @@ def log_path(clear_log, log_debug_var):
 
 def run_from_script():
     """
-        Runs update_packages() and sets ran_from_script to True. That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
+        Runs update_packages() and sets ran_from_script to True.
+        That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
     """
 
     global ran_from_script
