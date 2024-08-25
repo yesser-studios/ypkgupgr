@@ -11,7 +11,7 @@ from .graphics import progress_update, progress_ring, clear_screen
 from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages
 from .ignored import unignore_all as actually_unignore_all
 from .logs import logger, init_logging, log_debug, log_info
-from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated
+from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated, ran_from_script
 
 
 async def update(name: str, line: int):
