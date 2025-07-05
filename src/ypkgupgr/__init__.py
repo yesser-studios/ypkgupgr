@@ -12,6 +12,7 @@ from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_pa
 from .ignored import unignore_all as actually_unignore_all
 from .logs import logger, init_logging, log_debug, log_info
 from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated, ran_from_script
+from .altbuf import enter_alternate_buffer, exit_alternate_buffer
 
 
 async def update(name: str, line: int):
@@ -131,6 +132,8 @@ def update_packages():
 
     logger.info(f"Starting update. Platform: {sys.platform}")
 
+    enter_alternate_buffer()
+
     # Clears the screen.
     clear_screen()
 
@@ -187,6 +190,10 @@ def update_packages():
         logger.info("ypkgupgr is outdated and the script is used on Windows.")
 
     progress_ring(progress=100, complete=True)
+
+    input("Press any key to exit.")
+
+    exit_alternate_buffer()
 
 
 @click.group(context_settings=dict(help_option_names=["-?", "--help"]), invoke_without_command=True)
