@@ -191,7 +191,7 @@ def update_packages():
 
     progress_ring(progress=100, complete=True)
 
-    input("Press any key to exit.")
+    input("Press Enter to exit.")
 
     exit_alternate_buffer()
 
