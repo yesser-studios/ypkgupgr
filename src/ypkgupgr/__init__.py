@@ -122,7 +122,7 @@ async def start_updates(lines: list[str]):
         await task
 
 
-def update_packages():
+def update_packages(non_interactive: bool = False):
     """
         If calling from a python file, please use a subprocess instead.
     """
@@ -191,7 +191,8 @@ def update_packages():
 
     progress_ring(progress=100, complete=True)
 
-    input("Press Enter to exit.")
+    if not non_interactive:
+        input("Press Enter to exit.")
 
     exit_alternate_buffer()
 
@@ -202,8 +203,9 @@ def update_packages():
 @click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
 @click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
 @click.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
+@click.option('--non-interactive', 'non_interactive', is_flag=True, help='Skip any dialogs that require user input.')
 @click.pass_context
-def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all_var):
+def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all_var, non_interactive):
     global outdated_count
     global ypkgupgr_outdated
     global ran_from_script
@@ -237,7 +239,7 @@ def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all
     if (len(ignore) > 0 or len(unignore) > 0 or unignore_all_var):
         return
 
-    update_packages()
+    update_packages(non_interactive)
 
 
 @update_command.command(help="Add all packages in the given arguments to the ignored file and exit.")
