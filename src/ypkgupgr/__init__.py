@@ -155,6 +155,11 @@ def update_packages(non_interactive: bool = False):
         progress_ring(progress=100, complete=True)
         print("No outdated packages found.")
         logger.info("No outdated packages.")
+
+        if not non_interactive:
+            input("Press Enter to exit.")
+        exit_alternate_buffer()
+
         return
 
     outdated_count = len(lines)
