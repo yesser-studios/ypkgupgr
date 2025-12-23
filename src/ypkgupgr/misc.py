@@ -1,12 +1,15 @@
 from .colors import Colors
 
-failed = ""
-outdated_count = 0
-finished_count = 0
+failed: str = ""
+outdated_count: int = 0
+finished_count: int = 0
 
-ypkgupgr_outdated = False
+ypkgupgr_outdated: bool = False
 
-ran_from_script = False
+ran_from_script: bool = False
 
-line_count = 0
-current_lines = [Colors.RESET + "Getting outdated pip packages...", Colors.RESET + "Updating packages using pip..."]
+line_count: int = 0
+current_lines: list[str] = [
+    Colors.RESET + "Getting outdated pip packages...",
+    Colors.RESET + "Updating packages using pip...",
+]
