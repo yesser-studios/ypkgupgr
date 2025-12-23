@@ -159,8 +159,8 @@ def update_sync(name: str, line: int):
     # Updates the package using python -m pip install --upgrade <name>
     result = subprocess.run(
         [sys.executable, "-m", "pip", "install", "--upgrade", name],
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
 
     # Gets this process' return code.
