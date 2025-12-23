@@ -22,17 +22,12 @@ from .misc import (
 )
 
 
-async def update(name: str, line: int):
+def check_ignored(name: str, line: int) -> bool:
     """
-    Updates the package using its name.
+    Checks if a package is ignored, log and update progress if it is.
     """
 
-    global failed
-    global outdated_count
     global finished_count
-    global ypkgupgr_outdated
-
-    get_ignored_packages()
 
     if name in ignored:  # Package in ignored
         logger.info(f"Package {name} ignored.")
@@ -40,19 +35,26 @@ async def update(name: str, line: int):
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
-        return
+        return True
+    return False
 
-    logger.info(f"Updating {name}")
-    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
-    # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
+def check_ypkgupgr_script(name, line) -> bool:
+    """
+    Checks if the user is on Windows and if this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
+    Logs and updates progress if it is.
+    """
+
+    global failed
+    global ypkgupgr_outdated
+    global finished_count
+
     if name == "ypkgupgr" and ran_from_script and sys.platform == "win32":
         ypkgupgr_outdated = True
         finished_count += 1
         progress = int((finished_count / outdated_count) * 100)
         progress_ring(progress)
         progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
-        # print(f"ypkgupgr is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
         logger.info("Skipping ypkgupgr. See bottom of the logs for details.")
 
         if failed == "":
@@ -62,7 +64,70 @@ async def update(name: str, line: int):
 
         logger.debug("Added ypkgupgr into failed.")
 
+        return True
+    return False
+
+
+def post_update(name: str, line: int, stdout: bytes, return_code: int):
+    """
+    Checks return code and logs properly. Updates progress.
+    """
+
+    global finished_count
+    global failed
+    global outdated_count
+
+    logger.debug(f"Subprocess ended with code {return_code}")
+
+    # Adds a finished and updates the progress ring.
+    finished_count += 1
+    progress = int((finished_count / outdated_count) * 100)
+    progress_ring(progress)
+
+    # Checks for update success and if failed, logs the package's name into the failed list.
+    if return_code == 0:
+        progress_update(line, f"{name}: {Colors.GREEN}Done")
+        # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        logger.info(f"Successfully updated {name}.")
+    else:
+        logger.error(f"{name} failed to update; below is pip output:")
+
+        # Separates the output string by lines.
+        for errline in stdout.strip().decode().splitlines():
+            logger.error(errline)
+
+        logger.info("End of pip output.")
+
+        progress_update(line, f"{name}: {Colors.RED}Error")
+        # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+
+        if failed == "":
+            failed = name
+        else:
+            failed += ", " + name
+
+        logger.debug(f"Added {name} to failed.")
+
+
+async def update(name: str, line: int):
+    """
+    Updates the package using its name.
+    """
+
+    global failed
+    global outdated_count
+    global finished_count
+
+    get_ignored_packages()
+
+    if check_ignored(name, line):
         return
+
+    if check_ypkgupgr_script(name, line):
+        return
+
+    logger.info(f"Updating {name}")
+    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
     # Updates the package using python -m pip install --upgrade <name>
     process = await asyncio.create_subprocess_exec(
@@ -81,37 +146,7 @@ async def update(name: str, line: int):
     # Gets this process' return code.
     return_code = await process.wait()
 
-    logger.debug(f"Subprocess ended with code {return_code}")
-
-    # Adds a finished and updates the progress ring.
-    finished_count += 1
-    progress = int((finished_count / outdated_count) * 100)
-    progress_ring(progress)
-
-    # Checks for update success and if failed, logs the package's name into the failed list.
-    if return_code == 0:
-        progress_update(line, f"{name}: {Colors.GREEN}Done")
-        # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-        logger.info(f"Successfully updated {name}.")
-    else:
-        logger.error(f"{name} failed to update; below is pip output:")
-
-        # Separates the output string by lines.
-        (out, err) = await process.communicate()
-        for errline in out.strip().decode().splitlines():
-            logger.error(errline)
-
-        logger.info("End of pip output.")
-
-        progress_update(line, f"{name}: {Colors.RED}Error")
-        # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-
-        if failed == "":
-            failed = name
-        else:
-            failed += ", " + name
-
-        logger.debug(f"Added {name} to failed.")
+    post_update(name, line, (await process.communicate())[0], return_code)
 
 
 def update_sync(name: str, line: int):
@@ -126,34 +161,13 @@ def update_sync(name: str, line: int):
 
     get_ignored_packages()
 
-    if name in ignored:  # Package in ignored
-        logger.info(f"Package {name} ignored.")
-        progress_update(line, f"{name}: {Colors.YELLOW}Ignored")
-        finished_count += 1
-        progress = int((finished_count / outdated_count) * 100)
-        progress_ring(progress)
+    if check_ignored(name, line):
         return
 
     logger.info(f"Updating {name} synchronously")
     progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
-    # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
-    if name == "ypkgupgr" and ran_from_script and sys.platform == "win32":
-        ypkgupgr_outdated = True
-        finished_count += 1
-        progress = int((finished_count / outdated_count) * 100)
-        progress_ring(progress)
-        progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
-        # print(f"ypkgupgr is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-        logger.info("Skipping ypkgupgr. See bottom of the logs for details.")
-
-        if failed == "":
-            failed = name
-        else:
-            failed += ", " + name
-
-        logger.debug("Added ypkgupgr into failed.")
-
+    if check_ypkgupgr_script(name, line):
         return
 
     # Updates the package using python -m pip install --upgrade <name>
@@ -168,35 +182,7 @@ def update_sync(name: str, line: int):
 
     logger.debug(f"Subprocess ended with code {return_code}")
 
-    # Adds a finished and updates the progress ring.
-    finished_count += 1
-    progress = int((finished_count / outdated_count) * 100)
-    progress_ring(progress)
-
-    # Checks for update success and if failed, logs the package's name into the failed list.
-    if return_code == 0:
-        progress_update(line, f"{name}: {Colors.GREEN}Done")
-        # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-        logger.info(f"Successfully updated {name}.")
-    else:
-        logger.error(f"{name} failed to update; below is pip output:")
-
-        # Separates the output string by lines.
-        (out, _err) = (result.stdout, result.stderr)
-        for outline in out.strip().decode().splitlines():
-            logger.error(outline)
-
-        logger.info("End of pip output.")
-
-        progress_update(line, f"{name}: {Colors.RED}Error")
-        # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
-
-        if failed == "":
-            failed = name
-        else:
-            failed += ", " + name
-
-        logger.debug(f"Added {name} to failed.")
+    post_update(name, line, result.stdout, return_code)
 
 
 async def start_updates(lines: list[str]):
