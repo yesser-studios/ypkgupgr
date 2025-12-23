@@ -157,18 +157,17 @@ def update_sync(name: str, line: int):
     global failed
     global outdated_count
     global finished_count
-    global ypkgupgr_outdated
 
     get_ignored_packages()
 
     if check_ignored(name, line):
         return
 
-    logger.info(f"Updating {name} synchronously")
-    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
-
     if check_ypkgupgr_script(name, line):
         return
+
+    logger.info(f"Updating {name} synchronously")
+    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
 
     # Updates the package using python -m pip install --upgrade <name>
     result = subprocess.run(
