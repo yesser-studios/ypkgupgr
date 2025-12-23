@@ -313,7 +313,7 @@ def update_command(
         return
 
     log_info(
-        f"Starting command. Options: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}, {sync}"
+        f"Starting command. Options: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}, {non_interactive}, {sync}"
     )
 
     if len(ignore) > 0:
