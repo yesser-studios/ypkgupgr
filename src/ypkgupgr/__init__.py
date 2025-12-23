@@ -5,19 +5,26 @@ import sys
 import click
 import pyperclip
 
+from .altbuf import enter_alternate_buffer, exit_alternate_buffer
 from .appdata import create_appdata_dirs, log_dir
 from .colors import Colors
-from .graphics import progress_update, progress_ring, clear_screen
-from .ignored import ignored, get_ignored_packages, ignore_packages, unignore_packages
+from .graphics import clear_screen, progress_ring, progress_update
+from .ignored import get_ignored_packages, ignore_packages, ignored, unignore_packages
 from .ignored import unignore_all as actually_unignore_all
-from .logs import logger, init_logging, log_debug, log_info
-from .misc import failed, outdated_count, finished_count, ypkgupgr_outdated, ran_from_script
-from .altbuf import enter_alternate_buffer, exit_alternate_buffer
+from .logs import init_logging, log_debug, log_info, logger
+from .misc import (
+    failed,
+    finished_count,
+    line_count,
+    outdated_count,
+    ran_from_script,
+    ypkgupgr_outdated,
+)
 
 
 async def update(name: str, line: int):
     """
-        Updates the package using its name.
+    Updates the package using its name.
     """
 
     global failed
@@ -58,9 +65,11 @@ async def update(name: str, line: int):
         return
 
     # Updates the package using python -m pip install --upgrade <name>
-    process = await asyncio.create_subprocess_shell('"' + sys.executable + '"' + " -m pip install --upgrade " + name,
-                                                    stdout=asyncio.subprocess.PIPE,
-                                                    stderr=asyncio.subprocess.PIPE)
+    process = await asyncio.create_subprocess_shell(
+        '"' + sys.executable + '"' + " -m pip install --upgrade " + name,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
 
     logger.debug("Subprocess shell created.")
 
@@ -122,9 +131,26 @@ async def start_updates(lines: list[str]):
         await task
 
 
-def update_packages(non_interactive: bool = False):
+def start_updates_sync(lines: list[str]):
+    """Updates each package synchronously."""
+    global line_count
+
+    line_no = 3
+    for line in lines:
+        package_info = line.split()
+        package_name = package_info[0]
+
+        logger.debug(f"Starting to (synchronously) update {package_name}")
+        asyncio.run(update(package_name, line_no))
+
+        line_no += 1
+
+    line_count = line_no
+
+
+def update_packages(non_interactive: bool = False, sync: bool = False):
     """
-        If calling from a python file, please use a subprocess instead.
+    If calling from a python file, please use a subprocess instead.
     """
 
     global outdated_count
@@ -145,10 +171,18 @@ def update_packages(non_interactive: bool = False):
 
     # Runs the pip list --outdated command to get the outdated packages.
     outdated_packages = subprocess.check_output(
-        [sys.executable, '-m', 'pip', 'list', '--outdated', '--disable-pip-version-check']).decode('utf-8')
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "list",
+            "--outdated",
+            "--disable-pip-version-check",
+        ]
+    ).decode("utf-8")
 
     # Splits the output into lines and ignore the header.
-    lines = outdated_packages.strip().split('\n')[2:]
+    lines = outdated_packages.strip().split("\n")[2:]
 
     # Checks if there are any outdated packages.
     if len(lines) <= 0:
@@ -173,7 +207,10 @@ def update_packages(non_interactive: bool = False):
 
     logger.info("Starting to update packages...")
 
-    asyncio.run(start_updates(lines))
+    if sync:
+        start_updates_sync(lines)
+    else:
+        asyncio.run(start_updates(lines))
 
     logger.info("Finished updating packages.")
 
@@ -182,8 +219,12 @@ def update_packages(non_interactive: bool = False):
 
     # Prints conclusion.
     if len(failed) == 0:
-        print("All outdated packages have been updated. Thank you for using this package.")
-        logger.info(f"All outdated packages updated with a total of {outdated_count} packages.")
+        print(
+            "All outdated packages have been updated. Thank you for using this package."
+        )
+        logger.info(
+            f"All outdated packages updated with a total of {outdated_count} packages."
+        )
     else:
         print("The following packages failed to install: " + failed + "\n")
         logger.info(f"The following packages failed to install: {failed}")
@@ -191,7 +232,8 @@ def update_packages(non_interactive: bool = False):
     # Warns the user if ypkgupgr hasn't been updated.
     if ypkgupgr_outdated:
         print(
-            f'The ypkgupgr package is outdated, and you are using the script. Please use "{sys.executable} -m ypkgupgr" to update it.\n')
+            f'The ypkgupgr package is outdated, and you are using the script. Please use "{sys.executable} -m ypkgupgr" to update it.\n'
+        )
         logger.info("ypkgupgr is outdated and the script is used on Windows.")
 
     progress_ring(progress=100, complete=True)
@@ -202,15 +244,53 @@ def update_packages(non_interactive: bool = False):
     exit_alternate_buffer()
 
 
-@click.group(context_settings=dict(help_option_names=["-?", "--help"]), invoke_without_command=True)
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
-@click.option('--ignore', help='Add the package to the ignored file and exit.', multiple=True)
-@click.option('--unignore', help='Remove the package from the ignored file (if present) and exit.', multiple=True)
-@click.option('--unignore-all', 'unignore_all_var', is_flag=True, help='Clear the ignored file and exit.')
-@click.option('--non-interactive', 'non_interactive', is_flag=True, help='Skip any dialogs that require user input.')
+@click.group(
+    context_settings=dict(help_option_names=["-?", "--help"]),
+    invoke_without_command=True,
+)
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
+@click.option(
+    "--ignore", help="Add the package to the ignored file and exit.", multiple=True
+)
+@click.option(
+    "--unignore",
+    help="Remove the package from the ignored file (if present) and exit.",
+    multiple=True,
+)
+@click.option(
+    "--unignore-all",
+    "unignore_all_var",
+    is_flag=True,
+    help="Clear the ignored file and exit.",
+)
+@click.option(
+    "--non-interactive",
+    "non_interactive",
+    is_flag=True,
+    help="Skip any dialogs that require user input.",
+)
+@click.option(
+    "--sync",
+    "sync",
+    is_flag=True,
+    help="Updates packages synchronously (one-by-one)",
+)
 @click.pass_context
-def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all_var, non_interactive):
+def update_command(
+    ctx,
+    clear_log,
+    log_debug_var,
+    ignore,
+    unignore,
+    unignore_all_var,
+    non_interactive,
+    sync,
+):
     global outdated_count
     global ypkgupgr_outdated
     global ran_from_script
@@ -223,71 +303,99 @@ def update_command(ctx, clear_log, log_debug_var, ignore, unignore, unignore_all
     if ran_from_script:
         log_info("Running from script.")
 
-    if (ctx.invoked_subcommand is not None):
+    if ctx.invoked_subcommand is not None:
         log_info(f"Starting command {ctx.invoked_subcommand}.")
         return
 
-    log_info(f"Starting command. Options: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}")
+    log_info(
+        f"Starting command. Options: {clear_log}, {log_debug_var}, {ignore}, {unignore}, {unignore_all_var}, {sync}"
+    )
 
-    if (len(ignore) > 0):
+    if len(ignore) > 0:
         ignore_packages(list(ignore))
         # ^ ignores everything after --ignore.
 
-    if (len(unignore) > 0):
+    if len(unignore) > 0:
         unignore_packages(list(unignore))
         # ^ unignores everything after --unignore.
 
-    if (unignore_all_var):
+    if unignore_all_var:
         actually_unignore_all()
 
     # Return after both ignoring and unignoring packages.
-    if (len(ignore) > 0 or len(unignore) > 0 or unignore_all_var):
+    if len(ignore) > 0 or len(unignore) > 0 or unignore_all_var:
         return
 
-    update_packages(non_interactive)
+    update_packages(non_interactive, sync)
 
 
-@update_command.command(help="Add all packages in the given arguments to the ignored file and exit.")
+@update_command.command(
+    help="Add all packages in the given arguments to the ignored file and exit."
+)
 @click.argument("to_ignore", nargs=-1)
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
 def ignore(to_ignore, clear_log, log_debug_var):
     init_logging(clear_log, log_debug_var)
 
-    if (len(to_ignore) > 0):
+    if len(to_ignore) > 0:
         ignore_packages(to_ignore)
 
 
-@update_command.command(help="Remove all packages in the given arguments from the ignored file and exit.")
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+@update_command.command(
+    help="Remove all packages in the given arguments from the ignored file and exit."
+)
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
 @click.argument("to_unignore", nargs=-1)
 def unignore(to_unignore, clear_log, log_debug_var):
     init_logging(clear_log, log_debug_var)
 
-    if (len(to_unignore) > 0):
+    if len(to_unignore) > 0:
         unignore_packages(to_unignore)
 
 
 @update_command.command(help="Clear the ignored file and exit.")
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
 def unignore_all(clear_log, log_debug_var):
     init_logging(clear_log, log_debug_var)
 
     actually_unignore_all()
 
 
-@update_command.command(help="Open the logs directory with your default file explorer and exit.")
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+@update_command.command(
+    help="Open the logs directory with your default file explorer and exit."
+)
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
 def open_logs(clear_log, log_debug_var):
     click.launch(log_dir)
 
 
 @update_command.command(help="Show and copy the path to the logs directory and exit.")
-@click.option('--clear-log', is_flag=True, help='Clear the log file before writing to it.')
-@click.option('--log-debug', 'log_debug_var', is_flag=True, help='Log debug information.')
+@click.option(
+    "--clear-log", is_flag=True, help="Clear the log file before writing to it."
+)
+@click.option(
+    "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
+)
 def log_path(clear_log, log_debug_var):
     init_logging(clear_log, log_debug_var)
     print("Log path:")
@@ -300,8 +408,8 @@ def log_path(clear_log, log_debug_var):
 
 def run_from_script():
     """
-        Runs update_packages() and sets ran_from_script to True.
-        That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
+    Runs update_packages() and sets ran_from_script to True.
+    That contributes to fixing issue #11 of the original repo. (https://github.com/yesseruser/yesserpackageupdater/issues/11)
     """
 
     global ran_from_script
