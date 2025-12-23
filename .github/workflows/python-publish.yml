@@ -41,7 +41,7 @@ jobs:
         CHANGELOG=$(echo "$OUT" | jq -r .body)
         echo "$CHANGELOG" >>README.md
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v6
       with:
         python-version-file: 'pyproject.toml'
     - name: Install dependencies
