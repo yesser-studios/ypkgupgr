@@ -114,6 +114,91 @@ async def update(name: str, line: int):
         logger.debug(f"Added {name} to failed.")
 
 
+def update_sync(name: str, line: int):
+    """
+    Updates the package using its name synchronously.
+    """
+
+    global failed
+    global outdated_count
+    global finished_count
+    global ypkgupgr_outdated
+
+    get_ignored_packages()
+
+    if name in ignored:  # Package in ignored
+        logger.info(f"Package {name} ignored.")
+        progress_update(line, f"{name}: {Colors.YELLOW}Ignored")
+        finished_count += 1
+        progress = int((finished_count / outdated_count) * 100)
+        progress_ring(progress)
+        return
+
+    logger.info(f"Updating {name} synchronously")
+    progress_update(line, f"{name}: {Colors.WHITE}Updating...")
+
+    # Checks if the user is on windows and this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
+    if name == "ypkgupgr" and ran_from_script and sys.platform == "win32":
+        ypkgupgr_outdated = True
+        finished_count += 1
+        progress = int((finished_count / outdated_count) * 100)
+        progress_ring(progress)
+        progress_update(line, f"{name}: {Colors.YELLOW}Skipped")
+        # print(f"ypkgupgr is outdated and you are using the script. Continuing to update other packages... ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        logger.info("Skipping ypkgupgr. See bottom of the logs for details.")
+
+        if failed == "":
+            failed = name
+        else:
+            failed += ", " + name
+
+        logger.debug("Added ypkgupgr into failed.")
+
+        return
+
+    # Updates the package using python -m pip install --upgrade <name>
+    result = subprocess.run(
+        [sys.executable, "-m", "pip", "install", "--upgrade", name],
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+
+    # Gets this process' return code.
+    return_code = result.returncode
+
+    logger.debug(f"Subprocess ended with code {return_code}")
+
+    # Adds a finished and updates the progress ring.
+    finished_count += 1
+    progress = int((finished_count / outdated_count) * 100)
+    progress_ring(progress)
+
+    # Checks for update success and if failed, logs the package's name into the failed list.
+    if return_code == 0:
+        progress_update(line, f"{name}: {Colors.GREEN}Done")
+        # print(f"Successfully updated {name} ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+        logger.info(f"Successfully updated {name}.")
+    else:
+        logger.error(f"{name} failed to update; below is pip output:")
+
+        # Separates the output string by lines.
+        (out, _err) = (result.stdout, result.stderr)
+        for outline in out.strip().decode().splitlines():
+            logger.error(outline)
+
+        logger.info("End of pip output.")
+
+        progress_update(line, f"{name}: {Colors.RED}Error")
+        # print(f"{name} failed to update. ({progress}% - {finished_count}/{outdated_count} complete or failed)")
+
+        if failed == "":
+            failed = name
+        else:
+            failed += ", " + name
+
+        logger.debug(f"Added {name} to failed.")
+
+
 async def start_updates(lines: list[str]):
     """Updates each package."""
     global line_count
@@ -146,7 +231,7 @@ def start_updates_sync(lines: list[str]):
         package_name = package_info[0]
 
         logger.debug(f"Starting to (synchronously) update {package_name}")
-        asyncio.run(update(package_name, line_no))
+        update_sync(package_name, line_no)
 
         line_no += 1
 
