@@ -391,7 +391,9 @@ def unignore_all(clear_log, log_debug_var):
     "--log-debug", "log_debug_var", is_flag=True, help="Log debug information."
 )
 def open_logs(clear_log, log_debug_var):
+    init_logging(clear_log, log_debug_var)
     click.launch(log_dir)
+    log_debug("Opened logs directory.")
 
 
 @update_command.command(help="Show and copy the path to the logs directory and exit.")
