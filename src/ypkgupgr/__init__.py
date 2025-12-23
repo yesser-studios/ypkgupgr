@@ -39,7 +39,7 @@ def check_ignored(name: str, line: int) -> bool:
     return False
 
 
-def check_ypkgupgr_script(name, line) -> bool:
+def check_ypkgupgr_script(name: str, line: int) -> bool:
     """
     Checks if the user is on Windows and if this package is updated using the script. Fixes issue #11 (https://github.com/yesseruser/ypkgupgr/issues/11).
     Logs and updates progress if it is.
