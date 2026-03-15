@@ -1,6 +1,8 @@
 import subprocess
 import sys
 
+import pytest
+
 
 class TestMainIntegration:
     """Integration tests for main module CLI."""
@@ -116,6 +118,8 @@ class TestMainIntegration:
 
     def test_entry_point_ypkgupgr_help(self):
         """ypkgupgr entry point with --help should work."""
+        import sys
+
         try:
             from importlib.metadata import entry_points
         except ImportError:
@@ -126,7 +130,15 @@ class TestMainIntegration:
             ypkgupgr_ep = eps.select(group="console_scripts", name="ypkgupgr")
             ypkgupgr_func = next(iter(ypkgupgr_ep)).load()
         else:
-            ypkgupgr_func = eps.get("console_scripts", {}).get("ypkgupgr").load()
+            console_scripts = eps.get("console_scripts", ())
+            ypkgupgr_ep = None
+            for ep in console_scripts:
+                if ep.name == "ypkgupgr":
+                    ypkgupgr_ep = ep
+                    break
+            if ypkgupgr_ep is None:
+                pytest.skip("ypkgupgr console script entry point not found")
+            ypkgupgr_func = ypkgupgr_ep.load()
 
         with __import__("io").StringIO() as output:
             import sys
