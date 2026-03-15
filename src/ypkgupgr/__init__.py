@@ -50,6 +50,25 @@ def get_python_executable(
     return sys.executable
 
 
+def log_venv_selection(venv_path: Optional[str], no_venv: bool, venv_python: str):
+    """Log which Python interpreter is being used."""
+    in_active_venv = sys.prefix != getattr(sys, "base_prefix", sys.prefix)
+    is_via_venv_option = bool(venv_path)
+    is_auto_detected = not no_venv and not venv_path
+
+    if in_active_venv:
+        if is_via_venv_option:
+            log_info(f"Using specified virtual environment: {venv_python}")
+        elif is_auto_detected:
+            log_info(f"Using current virtual environment: {venv_python}")
+        else:
+            log_info("Using current virtual environment.")
+    elif venv_path or is_auto_detected:
+        log_info(f"Using virtual environment: {venv_python}")
+    else:
+        log_info("Using system Python.")
+
+
 def check_ignored(name: str, line: int) -> bool:
     """
     Checks if a package is ignored, log and update progress if it is.
@@ -420,22 +439,7 @@ def update_command(
     create_appdata_dirs()
 
     venv_python = get_python_executable(venv_path, no_venv)
-
-    in_active_venv = sys.prefix != getattr(sys, "base_prefix", sys.prefix)
-    is_via_venv_option = bool(venv_path)
-    is_auto_detected = not no_venv and not venv_path
-
-    if in_active_venv:
-        if is_via_venv_option:
-            log_info(f"Using specified virtual environment: {venv_python}")
-        elif is_auto_detected:
-            log_info(f"Using current virtual environment: {venv_python}")
-        else:
-            log_info("Using current virtual environment.")
-    elif venv_path or is_auto_detected:
-        log_info(f"Using virtual environment: {venv_python}")
-    else:
-        log_info("Using system Python.")
+    log_venv_selection(venv_path, no_venv, venv_python)
 
     # Log commands are handled in init_logging.
     init_logging(clear_log, log_debug_var)
