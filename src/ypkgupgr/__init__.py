@@ -1,6 +1,7 @@
 import asyncio
 import subprocess
 import sys
+from typing import Optional
 
 import click
 import pyperclip
@@ -20,6 +21,35 @@ from .misc import (
     ran_from_script,
     ypkgupgr_outdated,
 )
+from .venv import get_venv_python, is_in_venv, find_venv_in_parents
+
+venv_python: str = sys.executable
+
+
+def get_python_executable(
+    venv_path: Optional[str] = None, no_venv: bool = False
+) -> str:
+    """Get the appropriate Python executable to use."""
+    if no_venv:
+        return sys.executable
+
+    venv_python_path = get_venv_python(venv_path if venv_path else None)
+    if venv_python_path:
+        return str(venv_python_path)
+
+    return sys.executable
+
+    venv_python_path = get_venv_python(venv_path if venv_path else None)
+    if venv_python_path:
+        return str(venv_python_path)
+
+    return sys.executable
+
+    venv_python = get_venv_python(venv_path if venv_path else None)
+    if venv_python:
+        return str(venv_python)
+
+    return sys.executable
 
 
 def check_ignored(name: str, line: int) -> bool:
@@ -131,7 +161,7 @@ async def update(name: str, line: int):
 
     # Updates the package using python -m pip install --upgrade <name>
     process = await asyncio.create_subprocess_exec(
-        sys.executable,
+        venv_python,
         "-m",
         "pip",
         "install",
@@ -171,7 +201,7 @@ def update_sync(name: str, line: int):
 
     # Updates the package using python -m pip install --upgrade <name>
     result = subprocess.run(
-        [sys.executable, "-m", "pip", "install", "--upgrade", name],
+        [venv_python, "-m", "pip", "install", "--upgrade", name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -247,7 +277,7 @@ def update_packages(non_interactive: bool = False, sync: bool = False):
     # Runs the pip list --outdated command to get the outdated packages.
     outdated_packages = subprocess.check_output(
         [
-            sys.executable,
+            venv_python,
             "-m",
             "pip",
             "list",
@@ -355,6 +385,19 @@ def update_packages(non_interactive: bool = False, sync: bool = False):
     is_flag=True,
     help="Updates packages synchronously (one-by-one)",
 )
+@click.option(
+    "--venv",
+    "venv_path",
+    type=str,
+    default=None,
+    help="Path to virtual environment to use (default: auto-detect)",
+)
+@click.option(
+    "--no-venv",
+    "no_venv",
+    is_flag=True,
+    help="Disable automatic venv detection, use system Python",
+)
 @click.pass_context
 def update_command(
     ctx,
@@ -365,12 +408,21 @@ def update_command(
     unignore_all_var,
     non_interactive,
     sync,
+    venv_path,
+    no_venv,
 ):
     global outdated_count
     global ypkgupgr_outdated
     global ran_from_script
+    global venv_python
 
     create_appdata_dirs()
+
+    venv_python = get_python_executable(venv_path, no_venv)
+    if venv_python != sys.executable:
+        log_info(f"Using virtual environment: {venv_python}")
+    else:
+        log_info("Using system Python.")
 
     # Log commands are handled in init_logging.
     init_logging(clear_log, log_debug_var)
