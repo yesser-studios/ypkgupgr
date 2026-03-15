@@ -160,11 +160,6 @@ class TestVenv:
             result = get_venv_python(None)
             assert result is not None
 
-    @pytest.mark.skip(reason="Complex mocking required for this edge case")
-    def test_get_venv_python_current_venv(self):
-        """Should return current sys.executable when already in venv."""
-        pass
-
     def test_venv_names_includes_common_names(self):
         """VENV_NAMES should include common virtual environment names."""
         from ypkgupgr.venv import VENV_NAMES

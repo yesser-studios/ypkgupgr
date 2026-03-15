@@ -86,21 +86,6 @@ class TestGraphics:
                 call_args = mock_print.call_args[0][0]
                 assert ";1;" in call_args
 
-    @pytest.mark.skip(reason="Requires complex state management")
-    def test_progress_update_appends_to_current_lines(self):
-        """progress_update should append to current_lines."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex state management")
-    def test_progress_update_replaces_existing_line(self):
-        """progress_update should replace existing line."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex state management")
-    def test_progress_update_fills_gaps(self):
-        """progress_update should fill gaps in current_lines."""
-        pass
-
     def test_progress_update_calls_clear_screen(self):
         """progress_update should call clear_screen."""
         with patch("ypkgupgr.graphics.clear_screen") as mock_clear:
