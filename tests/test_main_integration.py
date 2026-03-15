@@ -32,6 +32,7 @@ class TestMainIntegration:
         )
 
         output = result.stdout + result.stderr
+        assert result.returncode in (0, 2)
         assert "version" in output.lower() or "no such option" in output.lower()
 
     def test_ypkgupgr_ignore_command(self):
