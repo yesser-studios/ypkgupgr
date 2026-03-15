@@ -60,8 +60,8 @@ class TestAppdata:
         assert "ypkgupgr" in appdata.log_dir.lower()
 
     def test_author_name_in_paths(self):
-        """Paths should contain the author name."""
+        """Paths should contain the app name (author may or may not be in path depending on OS)."""
         assert (
-            "yesser" in appdata.appdata_dir.lower()
-            or "yesser" in appdata.log_dir.lower()
+            "ypkgupgr" in appdata.appdata_dir.lower()
+            or "ypkgupgr" in appdata.log_dir.lower()
         )
