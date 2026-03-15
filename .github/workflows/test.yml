@@ -13,9 +13,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: blacksmith-2vcpu-ubuntu-2404-arm
+          - os: blacksmith-2vcpu-ubuntu-2404
             python-version: "3.9"
-          - os: blacksmith-2vcpu-ubuntu-2404-arm
+          - os: blacksmith-2vcpu-ubuntu-2404
             python-version: "3"
           - os: macos-latest
             python-version: "3"
