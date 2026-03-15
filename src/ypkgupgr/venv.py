@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -64,26 +63,5 @@ def get_venv_python(venv_path: Optional[str] = None) -> Optional[Path]:
 
     if python_exe.exists():
         return python_exe
-
-    return None
-
-
-def get_pip_executable(venv_python: Optional[Path] = None) -> Optional[Path]:
-    """Get the pip executable path for the given venv Python."""
-    if venv_python is None:
-        venv_python = get_venv_python()
-
-    if venv_python is None:
-        return None
-
-    venv_path = venv_python.parent.parent
-
-    if sys.platform == "win32":
-        pip_exe = venv_path / "Scripts" / "pip.exe"
-    else:
-        pip_exe = venv_path / "bin" / "pip"
-
-    if pip_exe.exists():
-        return pip_exe
 
     return None
