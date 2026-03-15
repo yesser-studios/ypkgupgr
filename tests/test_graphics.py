@@ -1,12 +1,8 @@
-import os
-import sys
-from io import StringIO
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pytest
 
 from ypkgupgr import graphics
-from ypkgupgr.colors import Colors
 
 
 class TestGraphics:

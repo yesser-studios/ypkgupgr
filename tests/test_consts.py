@@ -1,4 +1,3 @@
-import pytest
 from ypkgupgr.consts import APP_NAME, AUTHOR_NAME
 
 

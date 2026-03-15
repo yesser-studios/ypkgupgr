@@ -1,7 +1,5 @@
-import os
 import sys
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -40,6 +38,7 @@ def tmp_ignored_file(tmp_path, monkeypatch):
     """Create a temporary ignored file."""
     ignored_file = tmp_path / "ignored.cfg"
     monkeypatch.setattr("ypkgupgr.appdata.ignored_path", str(ignored_file))
+    monkeypatch.setattr("ypkgupgr.ignored.ignored_path", str(ignored_file))
     return ignored_file
 
 
@@ -71,6 +70,12 @@ def reset_ignored_list():
 def reset_misc_globals():
     """Reset global variables in misc module."""
     import ypkgupgr.misc as misc_module
+    from ypkgupgr.colors import Colors
+
+    default_current_lines = [
+        Colors.RESET + "Getting outdated pip packages...",
+        Colors.RESET + "Updating packages using pip...",
+    ]
 
     misc_module.failed = ""
     misc_module.outdated_count = 0
@@ -78,6 +83,7 @@ def reset_misc_globals():
     misc_module.ypkgupgr_outdated = False
     misc_module.ran_from_script = False
     misc_module.line_count = 0
+    misc_module.current_lines = default_current_lines.copy()
     yield
     misc_module.failed = ""
     misc_module.outdated_count = 0
@@ -85,3 +91,4 @@ def reset_misc_globals():
     misc_module.ypkgupgr_outdated = False
     misc_module.ran_from_script = False
     misc_module.line_count = 0
+    misc_module.current_lines = default_current_lines.copy()

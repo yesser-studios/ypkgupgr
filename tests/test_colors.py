@@ -1,4 +1,3 @@
-import pytest
 from ypkgupgr.colors import Colors
 
 
