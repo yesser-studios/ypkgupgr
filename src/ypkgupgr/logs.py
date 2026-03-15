@@ -11,20 +11,22 @@ logger = logging.getLogger("logger")
 
 def init_logging(clear_log, log_debug):
     """
-        Initialises the logger.
+    Initialises the logger.
     """
 
     global logger
 
     logger.setLevel(logging.DEBUG if log_debug else logging.INFO)
     file_handler = logging.FileHandler(log_file)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(levelname)s: %(message)s", "%d. %m. %Y %H:%M:%S"
+    )
     file_handler.setFormatter(formatter)
     logger.handlers = []
     logger.addHandler(file_handler)
 
     if clear_log:
-        with open(log_file, 'w'):
+        with open(log_file, "w"):
             pass
         logger.debug("Debug logging mode on.")
     logger.info("Logger initialized.")

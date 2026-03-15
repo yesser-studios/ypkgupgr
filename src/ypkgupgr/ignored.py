@@ -31,7 +31,9 @@ def unignore_packages(packages: list):
     for package in packages:
         with open(ignored_path, "w") as file:  # Open in overwrite mode
             for line in lines:
-                if line.strip() != package:  # Check if the line is identical with package
+                if (
+                    line.strip() != package
+                ):  # Check if the line is identical with package
                     file.write(line + "\n")  # If not, write it to overwrite
             file.flush()
             file.close()
@@ -53,7 +55,7 @@ def unignore_all():
 def get_ignored_packages():
     log_info("Getting ignored packages...")
 
-    if (not os.path.exists(ignored_path)):
+    if not os.path.exists(ignored_path):
         log_info("Ignored file not found. Continuing without ignoring packages...")
         return
 

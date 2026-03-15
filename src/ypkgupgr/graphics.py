@@ -7,12 +7,12 @@ from .misc import failed, current_lines
 
 
 def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def progress_ring(progress, complete=False, intermediate=False):
     """
-        Updates Windows Terminal's progress ring.
+    Updates Windows Terminal's progress ring.
     """
 
     # Checks if the WT_SESSION variable is set to prevent printing on consoles where this isn't supported.
@@ -34,7 +34,9 @@ def progress_ring(progress, complete=False, intermediate=False):
     # Show progress https://github.com/MicrosoftDocs/terminal/blob/main/TerminalDocs/tutorials/progress-bar-sequences.md
     print(f"{chr(27)}]9;4;{state};{progress}{chr(7)}", end="")
 
-    log_debug(f"Progress ring updated with the following data: State: {state}; Progress: {progress}")
+    log_debug(
+        f"Progress ring updated with the following data: State: {state}; Progress: {progress}"
+    )
 
 
 def progress_update(line: int, text: str):
