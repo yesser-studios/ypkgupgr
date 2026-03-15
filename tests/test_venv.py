@@ -1,39 +1,25 @@
 import sys
 from unittest.mock import patch
 
-import pytest
-
 
 class TestVenv:
     """Tests for venv detection functions."""
 
     def test_is_in_venv_outside_venv(self):
         """Should return False when not in a virtual environment."""
-        original_prefix = sys.prefix
-        original_base_prefix = sys.base_prefix
-        try:
-            with patch.object(sys, "prefix", sys.base_prefix):
-                with patch.object(sys, "base_prefix", sys.base_prefix):
-                    from ypkgupgr.venv import is_in_venv
+        with patch.object(sys, "prefix", sys.base_prefix):
+            with patch.object(sys, "base_prefix", sys.base_prefix):
+                from ypkgupgr.venv import is_in_venv
 
-                    assert is_in_venv() is False
-        finally:
-            sys.prefix = original_prefix
-            sys.base_prefix = original_base_prefix
+                assert is_in_venv() is False
 
     def test_is_in_venv_inside_venv(self):
         """Should return True when in a virtual environment."""
         from ypkgupgr.venv import is_in_venv
 
-        original_prefix = sys.prefix
-        original_base_prefix = sys.base_prefix
-        try:
-            with patch.object(sys, "prefix", "/fake/venv"):
-                with patch.object(sys, "base_prefix", "/usr"):
-                    assert is_in_venv() is True
-        finally:
-            sys.prefix = original_prefix
-            sys.base_prefix = original_base_prefix
+        with patch.object(sys, "prefix", "/fake/venv"):
+            with patch.object(sys, "base_prefix", "/usr"):
+                assert is_in_venv() is True
 
     def test_find_venv_in_parents_none_found(self, tmp_path):
         """Should return None when no venv is found in parents."""

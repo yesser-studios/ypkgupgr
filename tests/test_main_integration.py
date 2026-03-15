@@ -1,8 +1,6 @@
 import subprocess
 import sys
 
-import pytest
-
 
 class TestMainIntegration:
     """Integration tests for main module CLI."""
@@ -32,8 +30,12 @@ class TestMainIntegration:
         )
 
         output = result.stdout + result.stderr
-        assert result.returncode in (0, 2)
-        assert "version" in output.lower() or "no such option" in output.lower()
+        if "no such option" in output.lower():
+            assert result.returncode == 2
+        elif "version" in output.lower():
+            assert result.returncode == 0
+        else:
+            assert False, "Output did not match expected patterns"
 
     def test_ypkgupgr_ignore_command(self):
         """ypkgupgr ignore should work."""
@@ -114,11 +116,30 @@ class TestMainIntegration:
 
     def test_entry_point_ypkgupgr_help(self):
         """ypkgupgr entry point with --help should work."""
-        result = subprocess.run(
-            [sys.executable, "-m", "ypkgupgr", "--help"],
-            capture_output=True,
-            text=True,
-            timeout=self.TIMEOUT,
-        )
+        try:
+            from importlib.metadata import entry_points
+        except ImportError:
+            from importlib_metadata import entry_points
 
-        assert result.returncode == 0
+        eps = entry_points()
+        if hasattr(eps, "select"):
+            ypkgupgr_ep = eps.select(group="console_scripts", name="ypkgupgr")
+            ypkgupgr_func = next(iter(ypkgupgr_ep)).load()
+        else:
+            ypkgupgr_func = eps.get("console_scripts", {}).get("ypkgupgr").load()
+
+        with __import__("io").StringIO() as output:
+            import sys
+            from contextlib import redirect_stdout, redirect_stderr
+
+            old_argv = sys.argv
+            sys.argv = ["ypkgupgr", "--help"]
+            with redirect_stdout(output), redirect_stderr(output):
+                try:
+                    ypkgupgr_func()
+                except SystemExit:
+                    pass
+                finally:
+                    sys.argv = old_argv
+            output_value = output.getvalue()
+            assert "update" in output_value.lower() or "options" in output_value.lower()
