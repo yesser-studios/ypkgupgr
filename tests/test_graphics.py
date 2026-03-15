@@ -33,7 +33,7 @@ class TestGraphics:
         monkeypatch.delenv("WT_SESSION", raising=False)
 
         with patch("ypkgupgr.graphics.failed", ""):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(50)
                 mock_print.assert_not_called()
 
@@ -42,7 +42,7 @@ class TestGraphics:
         monkeypatch.setenv("WT_SESSION", "1")
 
         with patch("ypkgupgr.graphics.failed", ""):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(50)
                 mock_print.assert_called()
 
@@ -51,7 +51,7 @@ class TestGraphics:
         monkeypatch.setenv("WT_SESSION", "1")
 
         with patch("ypkgupgr.graphics.failed", ""):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(100, complete=True)
                 call_args = mock_print.call_args[0][0]
                 assert ";0;" in call_args
@@ -61,7 +61,7 @@ class TestGraphics:
         monkeypatch.setenv("WT_SESSION", "1")
 
         with patch("ypkgupgr.graphics.failed", ""):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(0, intermediate=True)
                 call_args = mock_print.call_args[0][0]
                 assert ";3;" in call_args
@@ -71,7 +71,7 @@ class TestGraphics:
         monkeypatch.setenv("WT_SESSION", "1")
 
         with patch("ypkgupgr.graphics.failed", "some_error"):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(50)
                 call_args = mock_print.call_args[0][0]
                 assert ";2;" in call_args
@@ -81,7 +81,7 @@ class TestGraphics:
         monkeypatch.setenv("WT_SESSION", "1")
 
         with patch("ypkgupgr.graphics.failed", ""):
-            with patch("ypkgupgr.graphics.print") as mock_print:
+            with patch("builtins.print") as mock_print:
                 graphics.progress_ring(50)
                 call_args = mock_print.call_args[0][0]
                 assert ";1;" in call_args

@@ -2,7 +2,6 @@ import subprocess
 import sys
 
 
-
 class TestMainIntegration:
     """Integration tests for main module CLI."""
 

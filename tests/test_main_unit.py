@@ -33,7 +33,7 @@ class TestMainUnit:
         python_path.parent.mkdir(parents=True, exist_ok=True)
         python_path.touch()
 
-        monkeypatch.setattr("ypkgupgr.venv.get_venv_python", lambda x: python_path)
+        monkeypatch.setattr("ypkgupgr.get_venv_python", lambda x: python_path)
 
         result = ypkgupgr.get_python_executable(venv_path=str(venv_path))
 
@@ -41,11 +41,14 @@ class TestMainUnit:
 
     def test_get_python_executable_invalid_venv_raises(self, monkeypatch):
         """get_python_executable with invalid venv should raise."""
+        import click
         import ypkgupgr
 
-        monkeypatch.setattr("ypkgupgr.venv.get_venv_python", lambda x: None)
+        monkeypatch.setattr("ypkgupgr.get_venv_python", lambda x: None)
 
-        with pytest.raises(Exception):
+        with pytest.raises(
+            click.ClickException, match="Invalid virtual environment path"
+        ):
             ypkgupgr.get_python_executable(venv_path="/invalid/path")
 
     @pytest.mark.skip(reason="Requires complex global state mocking")
@@ -79,7 +82,7 @@ class TestMainUnit:
         import ypkgupgr.misc as misc_module
 
         monkeypatch.setattr(sys, "platform", "win32")
-        misc_module.ran_from_script = True
+        monkeypatch.setattr(misc_module, "ran_from_script", True)
 
         result = ypkgupgr.check_ypkgupgr_script("otherpkg", 0)
 

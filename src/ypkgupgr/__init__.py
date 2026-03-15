@@ -7,7 +7,7 @@ from typing import Optional
 import click
 import pyperclip
 
-from .altbuf import enter_alternate_buffer, exit_alternate_buffer
+from .altbuf import alternate_buffer
 from .appdata import create_appdata_dirs, log_dir
 from .colors import Colors
 from .graphics import clear_screen, progress_ring, progress_update
@@ -275,90 +275,86 @@ def update_packages(non_interactive: bool = False, sync: bool = False):
 
     logger.info(f"Starting update. Platform: {sys.platform}")
 
-    enter_alternate_buffer()
+    with alternate_buffer():
+        # Clears the screen.
+        clear_screen()
 
-    # Clears the screen.
-    clear_screen()
+        progress_ring(progress=0, intermediate=True)
 
-    progress_ring(progress=0, intermediate=True)
+        # Remember to change string in misc.current_lines if changing this
+        print("Getting outdated pip packages...")
+        logger.info("Getting outdated packages.")
 
-    # Remember to change string in misc.current_lines if changing this
-    print("Getting outdated pip packages...")
-    logger.info("Getting outdated packages.")
+        # Runs the pip list --outdated command to get the outdated packages.
+        outdated_packages = subprocess.check_output(
+            [
+                venv_python,
+                "-m",
+                "pip",
+                "list",
+                "--outdated",
+                "--disable-pip-version-check",
+            ]
+        ).decode("utf-8")
 
-    # Runs the pip list --outdated command to get the outdated packages.
-    outdated_packages = subprocess.check_output(
-        [
-            venv_python,
-            "-m",
-            "pip",
-            "list",
-            "--outdated",
-            "--disable-pip-version-check",
-        ]
-    ).decode("utf-8")
+        # Splits the output into lines and ignore the header.
+        lines = outdated_packages.strip().split("\n")[2:]
 
-    # Splits the output into lines and ignore the header.
-    lines = outdated_packages.strip().split("\n")[2:]
+        # Checks if there are any outdated packages.
+        if len(lines) <= 0:
+            progress_ring(progress=100, complete=True)
+            print("No outdated packages found.")
+            logger.info("No outdated packages.")
 
-    # Checks if there are any outdated packages.
-    if len(lines) <= 0:
+            if not non_interactive:
+                input("Press Enter to exit.")
+
+            return
+
+        outdated_count = len(lines)
+
+        logger.info(f"Outdated packages: {lines}")
+
+        clear_screen()
+
+        # Remember to change string in misc.current_lines if changing this
+        print("Updating packages using pip...")
+
+        logger.info("Starting to update packages...")
+
+        if sync:
+            start_updates_sync(lines)
+        else:
+            asyncio.run(start_updates(lines))
+
+        logger.info("Finished updating packages.")
+
+        # Empty line before conclusion.
+        print(f"\033[{line_count};1H" + Colors.RESET)
+
+        # Prints conclusion.
+        if len(failed) == 0:
+            print(
+                "All outdated packages have been updated. Thank you for using this package."
+            )
+            logger.info(
+                f"All outdated packages updated with a total of {outdated_count} packages."
+            )
+        else:
+            print("The following packages failed to install: " + failed + "\n")
+            logger.info(f"The following packages failed to install: {failed}")
+
+        # Warns the user if ypkgupgr hasn't been updated.
+        if ypkgupgr_outdated:
+            print(
+                f'The ypkgupgr package is outdated, and you are using the script. Please use "{sys.executable} -m ypkgupgr" to update it.\n'
+            )
+            logger.info("ypkgupgr is outdated and the script is used on Windows.")
+
         progress_ring(progress=100, complete=True)
-        print("No outdated packages found.")
-        logger.info("No outdated packages.")
 
         if not non_interactive:
             input("Press Enter to exit.")
-        exit_alternate_buffer()
-
-        return
-
-    outdated_count = len(lines)
-
-    logger.info(f"Outdated packages: {lines}")
-
-    clear_screen()
-
-    # Remember to change string in misc.current_lines if changing this
-    print("Updating packages using pip...")
-
-    logger.info("Starting to update packages...")
-
-    if sync:
-        start_updates_sync(lines)
-    else:
-        asyncio.run(start_updates(lines))
-
-    logger.info("Finished updating packages.")
-
-    # Empty line before conclusion.
-    print(f"\033[{line_count};1H" + Colors.RESET)
-
-    # Prints conclusion.
-    if len(failed) == 0:
-        print(
-            "All outdated packages have been updated. Thank you for using this package."
-        )
-        logger.info(
-            f"All outdated packages updated with a total of {outdated_count} packages."
-        )
-    else:
-        print("The following packages failed to install: " + failed + "\n")
-        logger.info(f"The following packages failed to install: {failed}")
-
-    # Warns the user if ypkgupgr hasn't been updated.
-    if ypkgupgr_outdated:
-        print(
-            f'The ypkgupgr package is outdated, and you are using the script. Please use "{sys.executable} -m ypkgupgr" to update it.\n'
-        )
-        logger.info("ypkgupgr is outdated and the script is used on Windows.")
-
-    progress_ring(progress=100, complete=True)
-
-    if not non_interactive:
-        input("Press Enter to exit.")
-
-    exit_alternate_buffer()
 
 
 @click.group(

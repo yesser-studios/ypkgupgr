@@ -1,5 +1,3 @@
-
-
 from ypkgupgr import appdata
 
 
