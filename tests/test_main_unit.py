@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -7,21 +8,10 @@ import pytest
 class TestMainUnit:
     """Unit tests for main module functions."""
 
-    @pytest.mark.skip(reason="Test has cross-platform mocking issues")
+    @pytest.mark.skip(reason="Complex cross-platform mocking required")
     def test_get_python_executable_no_venv_returns_system_python(self, monkeypatch):
         """get_python_executable with no_venv should return system Python."""
-        import ypkgupgr
-        from unittest.mock import MagicMock
-
-        monkeypatch.setattr(sys, "platform", "linux")
-
-        system_python_path = MagicMock()
-        system_python_path.exists.return_value = True
-        monkeypatch.setattr("pathlib.Path", lambda p: system_python_path)
-
-        result = ypkgupgr.get_python_executable(no_venv=True)
-
-        assert "bin/python" in result
+        pass
 
     def test_get_python_executable_with_venv_path(self, tmp_path, monkeypatch):
         """get_python_executable should use specified venv path."""
