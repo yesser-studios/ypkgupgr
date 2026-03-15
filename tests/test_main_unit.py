@@ -26,7 +26,7 @@ class TestMainUnit:
 
         result = ypkgupgr.get_python_executable(venv_path=str(venv_path))
 
-        assert str(python_path) in result
+        assert result == str(python_path)
 
     def test_get_python_executable_invalid_venv_raises(self, monkeypatch):
         """get_python_executable with invalid venv should raise."""
