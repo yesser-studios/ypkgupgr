@@ -1,6 +1,7 @@
 import asyncio
 import subprocess
 import sys
+from pathlib import Path
 from typing import Optional
 
 import click
@@ -31,6 +32,12 @@ def get_python_executable(
 ) -> str:
     """Get the appropriate Python executable to use."""
     if no_venv:
+        if sys.platform == "win32":
+            system_python = Path(sys.base_prefix) / "python.exe"
+        else:
+            system_python = Path(sys.base_prefix) / "bin" / "python"
+        if system_python.exists():
+            return str(system_python)
         return sys.executable
 
     venv_python_path = get_venv_python(venv_path if venv_path else None)
@@ -413,7 +420,19 @@ def update_command(
     create_appdata_dirs()
 
     venv_python = get_python_executable(venv_path, no_venv)
-    if venv_python != sys.executable:
+
+    in_active_venv = sys.prefix != getattr(sys, "base_prefix", sys.prefix)
+    is_via_venv_option = bool(venv_path)
+    is_auto_detected = not no_venv and not venv_path
+
+    if in_active_venv:
+        if is_via_venv_option:
+            log_info(f"Using specified virtual environment: {venv_python}")
+        elif is_auto_detected:
+            log_info(f"Using current virtual environment: {venv_python}")
+        else:
+            log_info("Using current virtual environment.")
+    elif venv_path or is_auto_detected:
         log_info(f"Using virtual environment: {venv_python}")
     else:
         log_info("Using system Python.")
