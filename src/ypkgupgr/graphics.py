@@ -1,5 +1,6 @@
-import os
 import io
+import os
+import subprocess
 
 from .logs import log_debug
 from .colors import Colors
@@ -7,7 +8,7 @@ from .misc import failed, current_lines
 
 
 def clear_screen():
-    os.system("cls" if os.name == "nt" else "clear")
+    subprocess.run(["cls" if os.name == "nt" else "clear"], check=False)
 
 
 def progress_ring(progress, complete=False, intermediate=False):

@@ -8,25 +8,25 @@ from ypkgupgr import graphics
 class TestGraphics:
     """Tests for graphics functionality."""
 
-    def test_clear_screen_calls_os_system(self):
-        """clear_screen should call os.system with correct command."""
-        with patch("ypkgupgr.graphics.os.system") as mock_system:
+    def test_clear_screen_calls_subprocess(self):
+        """clear_screen should call subprocess.run."""
+        with patch("ypkgupgr.graphics.subprocess.run") as mock_run:
             graphics.clear_screen()
-            mock_system.assert_called_once()
+            mock_run.assert_called_once()
 
     def test_clear_screen_uses_clear_on_unix(self):
         """clear_screen should use 'clear' on non-Windows."""
-        with patch("ypkgupgr.graphics.os.system") as mock_system:
+        with patch("ypkgupgr.graphics.subprocess.run") as mock_run:
             with patch("ypkgupgr.graphics.os.name", "posix"):
                 graphics.clear_screen()
-                mock_system.assert_called_with("clear")
+                mock_run.assert_called_with(["clear"], check=False)
 
     def test_clear_screen_uses_cls_on_windows(self):
         """clear_screen should use 'cls' on Windows."""
-        with patch("ypkgupgr.graphics.os.system") as mock_system:
+        with patch("ypkgupgr.graphics.subprocess.run") as mock_run:
             with patch("ypkgupgr.graphics.os.name", "nt"):
                 graphics.clear_screen()
-                mock_system.assert_called_with("cls")
+                mock_run.assert_called_with(["cls"], check=False)
 
     def test_progress_ring_no_op_without_wt_session(self, monkeypatch):
         """progress_ring should not print without WT_SESSION."""
