@@ -105,8 +105,3 @@ class TestMainIntegration:
         )
 
         assert result.returncode == 0
-
-    @pytest.mark.skip(reason="Entry point requires package installation")
-    def test_entry_point_yesserpackageupdater_help(self):
-        """yesserpackageupdater entry point with --help should work."""
-        pass
