@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -7,11 +6,6 @@ import pytest
 
 class TestMainUnit:
     """Unit tests for main module functions."""
-
-    @pytest.mark.skip(reason="Complex cross-platform mocking required")
-    def test_get_python_executable_no_venv_returns_system_python(self, monkeypatch):
-        """get_python_executable with no_venv should return system Python."""
-        pass
 
     def test_get_python_executable_with_venv_path(self, tmp_path, monkeypatch):
         """get_python_executable should use specified venv path."""
@@ -46,21 +40,6 @@ class TestMainUnit:
         ):
             ypkgupgr.get_python_executable(venv_path="/invalid/path")
 
-    @pytest.mark.skip(reason="Requires complex global state mocking")
-    def test_check_ignored_returns_true_for_ignored_package(self):
-        """check_ignored should return True for ignored package."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex global state mocking")
-    def test_check_ignored_returns_false_for_non_ignored_package(self):
-        """check_ignored should return False for non-ignored package."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex global state mocking")
-    def test_check_ypkgupgr_script_returns_true_on_windows_script(self):
-        """check_ypkgupgr_script should return True for ypkgupgr on Windows from script."""
-        pass
-
     def test_check_ypkgupgr_script_returns_false_on_non_windows(self, monkeypatch):
         """check_ypkgupgr_script should return False on non-Windows."""
         import ypkgupgr
@@ -82,41 +61,6 @@ class TestMainUnit:
         result = ypkgupgr.check_ypkgupgr_script("otherpkg", 0)
 
         assert result is False
-
-    @pytest.mark.skip(reason="Requires complex async mocking")
-    def test_update_skips_ignored_package(self):
-        """update should skip ignored packages."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex async mocking")
-    def test_update_calls_pip_install(self):
-        """update should call pip install."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex mocking")
-    def test_update_sync_calls_pip_install(self):
-        """update_sync should call pip install."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex global state")
-    def test_post_update_success_logs_info(self):
-        """post_update should log success when return code is 0."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex global state")
-    def test_post_update_failure_logs_error(self):
-        """post_update should log error when return code is non-zero."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex global state")
-    def test_post_update_increments_finished_count(self):
-        """post_update should increment finished_count."""
-        pass
-
-    @pytest.mark.skip(reason="Requires complex async mocking")
-    def test_start_updates_creates_tasks(self):
-        """start_updates should create async tasks for each package."""
-        pass
 
     def test_start_updates_sync_iterates_packages(self, monkeypatch):
         """start_updates_sync should iterate through packages."""
