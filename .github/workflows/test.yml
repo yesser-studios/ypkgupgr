@@ -13,13 +13,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: blacksmith-2vcpu-ubuntu-2404
             python-version: "3.9"
-          - os: ubuntu-latest
+          - os: blacksmith-2vcpu-ubuntu-2404
             python-version: "3"
           - os: macos-latest
             python-version: "3"
-          - os: windows-latest
+          - os: blacksmith-4vcpu-windows-2025
             python-version: "3"
 
     steps:
