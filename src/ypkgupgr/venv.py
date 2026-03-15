@@ -19,7 +19,6 @@ def find_venv_in_parents(start_path: Optional[Path] = None) -> Optional[Path]:
         start_path = Path(start_path).resolve()
 
     current = start_path
-    home = Path.home()
 
     while True:
         for name in VENV_NAMES:
@@ -33,7 +32,7 @@ def find_venv_in_parents(start_path: Optional[Path] = None) -> Optional[Path]:
                     return venv_path
 
         parent = current.parent
-        if parent == current or parent == home:
+        if parent == current:
             break
         current = parent
 

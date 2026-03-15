@@ -37,17 +37,8 @@ def get_python_executable(
     if venv_python_path:
         return str(venv_python_path)
 
-    return sys.executable
-
-    venv_python_path = get_venv_python(venv_path if venv_path else None)
-    if venv_python_path:
-        return str(venv_python_path)
-
-    return sys.executable
-
-    venv_python = get_venv_python(venv_path if venv_path else None)
-    if venv_python:
-        return str(venv_python)
+    if venv_path:
+        raise click.ClickException(f"Invalid virtual environment path: {venv_path}")
 
     return sys.executable
 
@@ -415,6 +406,9 @@ def update_command(
     global ypkgupgr_outdated
     global ran_from_script
     global venv_python
+
+    if venv_path and no_venv:
+        raise click.UsageError("Cannot use --venv with --no-venv")
 
     create_appdata_dirs()
 
