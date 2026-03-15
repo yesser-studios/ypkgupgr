@@ -25,6 +25,14 @@ dependencies = [
     "pyperclip<2.0.0"
 ]
 
+[project.optional-dependencies]
+dev = ["pytest", "pytest-mock", "pytest-asyncio", "ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+
 [project.scripts]
 yesserpackageupdater = "ypkgupgr:run_from_script"
 ypkgupgr = "ypkgupgr:run_from_script"
