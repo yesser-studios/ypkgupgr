@@ -7,10 +7,15 @@ import pytest
 class TestMainIntegration:
     """Integration tests for main module CLI."""
 
+    TIMEOUT = 30
+
     def test_ypkgupgr_help_command(self):
         """ypkgupgr --help should work."""
         result = subprocess.run(
-            [sys.executable, "-m", "ypkgupgr", "--help"], capture_output=True, text=True
+            [sys.executable, "-m", "ypkgupgr", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -23,6 +28,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "--version"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         output = result.stdout + result.stderr
@@ -34,6 +40,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "ignore", "--help"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -44,6 +51,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "unignore", "--help"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -54,6 +62,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "unignore-all", "--help"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -64,6 +73,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "log-path", "--help"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -74,6 +84,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "open-logs", "--help"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
@@ -84,6 +95,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "--invalid-option"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode != 0
@@ -94,6 +106,7 @@ class TestMainIntegration:
             [sys.executable, "-m", "ypkgupgr", "--venv", "/path", "--no-venv"],
             capture_output=True,
             text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode != 0
@@ -101,7 +114,10 @@ class TestMainIntegration:
     def test_entry_point_ypkgupgr_help(self):
         """ypkgupgr entry point with --help should work."""
         result = subprocess.run(
-            [sys.executable, "-m", "ypkgupgr", "--help"], capture_output=True, text=True
+            [sys.executable, "-m", "ypkgupgr", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=self.TIMEOUT,
         )
 
         assert result.returncode == 0
