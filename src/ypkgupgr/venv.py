@@ -23,12 +23,14 @@ def find_venv_in_parents(start_path: Optional[Path] = None) -> Optional[Path]:
         for name in VENV_NAMES:
             venv_path = current / name
             if venv_path.is_dir():
-                python_path = venv_path / "bin" / "python"
-                if (
-                    python_path.exists()
-                    or (venv_path / "Scripts" / "python.exe").exists()
-                ):
-                    return venv_path
+                pyvenv_cfg = venv_path / "pyvenv.cfg"
+                if pyvenv_cfg.exists():
+                    python_path = venv_path / "bin" / "python"
+                    if (
+                        python_path.exists()
+                        or (venv_path / "Scripts" / "python.exe").exists()
+                    ):
+                        return venv_path
 
         parent = current.parent
         if parent == current:

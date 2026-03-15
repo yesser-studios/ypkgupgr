@@ -52,21 +52,16 @@ def get_python_executable(
 
 def log_venv_selection(venv_path: Optional[str], no_venv: bool, venv_python: str):
     """Log which Python interpreter is being used."""
-    in_active_venv = sys.prefix != getattr(sys, "base_prefix", sys.prefix)
-    is_via_venv_option = bool(venv_path)
-    is_auto_detected = not no_venv and not venv_path
+    detected_venv = None if no_venv or venv_path else find_venv_in_parents()
 
-    if in_active_venv:
-        if is_via_venv_option:
-            log_info(f"Using specified virtual environment: {venv_python}")
-        elif is_auto_detected:
-            log_info(f"Using current virtual environment: {venv_python}")
-        else:
-            log_info("Using current virtual environment.")
-    elif venv_path or is_auto_detected:
-        log_info(f"Using virtual environment: {venv_python}")
+    if venv_path:
+        log_info(f"Using specified virtual environment: {venv_python}")
+    elif detected_venv:
+        log_info(f"Using detected virtual environment: {venv_python}")
+    elif no_venv or not is_in_venv():
+        log_info(f"Using system Python: {venv_python}")
     else:
-        log_info("Using system Python.")
+        log_info(f"Using current virtual environment: {venv_python}")
 
 
 def check_ignored(name: str, line: int) -> bool:
